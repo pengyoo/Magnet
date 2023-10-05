@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Data
+@Table(name = "resume")
 public class Resume {
 
     @Id
@@ -51,6 +52,7 @@ public class Resume {
      */
     @Data
     @Entity
+    @Table(name = "resume_contact_information")
     class ContactInformation {
 
         @Id
@@ -77,6 +79,7 @@ public class Resume {
      */
     @Data
     @Entity
+    @Table(name = "resume_skill")
     class Skill {
 
         @Id
@@ -99,6 +102,7 @@ public class Resume {
      */
     @Entity
     @Data
+    @Table(name = "resume_education")
     class Education {
 
         @Id
@@ -125,6 +129,7 @@ public class Resume {
      */
     @Entity
     @Data
+    @Table(name = "resume_work_experience")
     class WorkExperience {
 
         @Id

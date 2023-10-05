@@ -1,11 +1,11 @@
 package com.pengyu.magnet.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     // There will be 3 types of Role in this system: JOB_SEEKER, COMPANY, ADMIN
@@ -29,5 +32,6 @@ public class User {
     private String email;
     private String password;
     private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
     private Role role;
 }
