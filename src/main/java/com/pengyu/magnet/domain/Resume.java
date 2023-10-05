@@ -4,6 +4,7 @@ package com.pengyu.magnet.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -43,5 +44,108 @@ public class Resume {
     // One resume has multiple skills
     @OneToMany(mappedBy = "resume")
     private List<Skill> skillList;
+
+
+    /**
+     * ContactInformation Entity for Resume
+     */
+    @Data
+    @Entity
+    class ContactInformation {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private String phoneNumber;
+        private String email;
+        private String address;
+        private String city;
+        private String country;
+        private String linkedInUrl;
+
+        // One contactInformation belongs to one resume
+        @OneToOne
+        @JoinColumn(name = "resume_id",
+                referencedColumnName = "id",
+                foreignKey = @ForeignKey(name = "contact_resume_id_fk")
+        )
+        private Resume resume;
+    }
+
+    /**
+     * Skill Entity
+     */
+    @Data
+    @Entity
+    class Skill {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private String skill;
+
+        // One resume can have multiple Skills
+        @ManyToOne(cascade = CascadeType.ALL)
+        @JoinColumn(
+                name = "resume_id",
+                referencedColumnName = "id",
+                foreignKey = @ForeignKey(name = "skill_resume_id_fk")
+        )
+        private Resume resume;
+    }
+
+    /**
+     * Education experience Entity
+     */
+    @Entity
+    @Data
+    class Education {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        // One resume can have multiple educations
+        @ManyToOne(cascade = CascadeType.PERSIST)
+        @JoinColumn(
+                name = "resume_id",
+                referencedColumnName = "id",
+                foreignKey = @ForeignKey(name = "education_resume_id_fk")
+        )
+        private Resume resume;
+        private String schoolName;
+        private String degree;
+        private String major;
+        private LocalDate startDate;
+        private LocalDate endDate;
+    }
+
+    /**
+     * Work Experience Entity
+     */
+    @Entity
+    @Data
+    class WorkExperience {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        // One resume has multiple work experiences
+        @ManyToOne
+        @JoinColumn(
+                name = "resume_id",
+                referencedColumnName = "id",
+                foreignKey = @ForeignKey(name = "work_experience_resume_id_fk")
+        )
+        private Resume resume;
+
+        private String position;
+        private String companyName;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String description;
+        private String location;
+    }
 
 }
