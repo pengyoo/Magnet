@@ -1,5 +1,6 @@
 package com.pengyu.magnet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition = "text")
     private String description;
     private String address;
 
@@ -29,6 +31,7 @@ public class Company {
     private User user;
 
     // One company has multiple jobs
-    @OneToMany(mappedBy = "company")
-    private List<Job> jobList;
+//    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<Job> jobList;
 }

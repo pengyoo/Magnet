@@ -20,6 +20,8 @@ public class Resume {
     private Long id;
 
     private String fullName;
+
+    @Column(columnDefinition = "text")
     private String profile;
 
     // One JOB_SEEKER can have one RESUME
@@ -149,6 +151,7 @@ public class Resume {
         private String companyName;
         private LocalDate startDate;
         private LocalDate endDate;
+        @Column(columnDefinition = "text")
         private String description;
         private String location;
     }

@@ -28,6 +28,8 @@ public class Job {
     )
     private Company company;
     private String title;
+
+    @Column(columnDefinition = "text")
     private String description;
     private String salaryRange;
     private String location;
