@@ -35,4 +35,12 @@ public class Job {
     private String location;
     private LocalDateTime createdAt;
     private LocalDateTime expireAt;
+
+    private Status status;
+
+    public enum Status {
+        ACTIVE,
+        EXPIRED,
+        DELETED
+    }
 }

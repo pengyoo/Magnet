@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.pengyu.magnet.domain.Company;
+import com.pengyu.magnet.domain.Job;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -29,4 +30,6 @@ public class JobResponse {
     private LocalDateTime createdAt;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expireAt;
+
+    private Job.Status status;
 }

@@ -52,6 +52,13 @@ public class Resume {
 
     private LocalDateTime createdAt;
 
+    private Status status;
+
+    public enum Status {
+        ACTIVE,
+        DELETED
+    }
+
 
     /**
      * ContactInformation Entity for Resume
@@ -71,6 +78,8 @@ public class Resume {
         private String country;
         private String postCode;
         private String linkedInUrl;
+
+
 
         // One contactInformation belongs to one resume
         @OneToOne

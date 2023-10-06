@@ -1,10 +1,7 @@
 package com.pengyu.magnet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Company Entity

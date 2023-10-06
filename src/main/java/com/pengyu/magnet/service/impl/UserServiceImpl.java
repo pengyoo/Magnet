@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
                 .createdAt(LocalDateTime.now())
-                .isEnabled(true).build();
+                .status(User.Status.REGISTERED).build();
         user =  userRepository.save(user);
 
         UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(user);

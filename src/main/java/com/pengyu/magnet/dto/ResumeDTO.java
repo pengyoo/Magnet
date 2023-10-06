@@ -2,6 +2,7 @@ package com.pengyu.magnet.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.pengyu.magnet.domain.Resume;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -24,6 +25,8 @@ public class ResumeDTO {
     private List<SkillDTO> skills;
     private List<EducationDTO> educations;
     private List<WorkExperienceDTO> workExperiences;
+
+    private Resume.Status status;
 
     @Data
     public static class ContactInformationDTO {

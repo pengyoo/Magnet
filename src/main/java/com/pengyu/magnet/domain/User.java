@@ -39,10 +39,16 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    private boolean isEnabled;
+    private Status status;
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public enum Status {
+        REGISTERED,
+        ACTIVE,
+        DELETED
+    }
 
 
     /**
@@ -76,6 +82,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return status == Status.ACTIVE;
     }
 }
