@@ -35,3 +35,7 @@ build/
 /.mvn/wrapper/maven-wrapper.properties
 /mvnw
 /mvnw.cmd
+
+### ENV ###
+.env
+
