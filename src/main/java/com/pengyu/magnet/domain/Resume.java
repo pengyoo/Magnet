@@ -1,10 +1,12 @@
 package com.pengyu.magnet.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,20 +35,22 @@ public class Resume {
     private User user;
 
     // One Resume has one contact info
-    @OneToOne(mappedBy = "resume")
+    @OneToOne(mappedBy = "resume", cascade = CascadeType.ALL)
     private ContactInformation contactInformation;
 
     // One resume has multiple education experiences
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private List<Education> educationList;
 
     // One resume has multiple work experiences
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private List<WorkExperience> workExperienceList;
 
     // One resume has multiple skills
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private List<Skill> skillList;
+
+    private LocalDateTime createdAt;
 
 
     /**
@@ -55,7 +59,7 @@ public class Resume {
     @Data
     @Entity
     @Table(name = "resume_contact_information")
-    class ContactInformation {
+    public static class ContactInformation {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +69,7 @@ public class Resume {
         private String address;
         private String city;
         private String country;
+        private String postCode;
         private String linkedInUrl;
 
         // One contactInformation belongs to one resume
@@ -82,7 +87,7 @@ public class Resume {
     @Data
     @Entity
     @Table(name = "resume_skill")
-    class Skill {
+    public static class Skill {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,6 +101,7 @@ public class Resume {
                 referencedColumnName = "id",
                 foreignKey = @ForeignKey(name = "skill_resume_id_fk")
         )
+        @JsonIgnore
         private Resume resume;
     }
 
@@ -105,7 +111,7 @@ public class Resume {
     @Entity
     @Data
     @Table(name = "resume_education")
-    class Education {
+    public static class Education {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -118,6 +124,7 @@ public class Resume {
                 referencedColumnName = "id",
                 foreignKey = @ForeignKey(name = "education_resume_id_fk")
         )
+        @JsonIgnore
         private Resume resume;
         private String schoolName;
         private String degree;
@@ -132,7 +139,7 @@ public class Resume {
     @Entity
     @Data
     @Table(name = "resume_work_experience")
-    class WorkExperience {
+    public static class WorkExperience {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -145,6 +152,7 @@ public class Resume {
                 referencedColumnName = "id",
                 foreignKey = @ForeignKey(name = "work_experience_resume_id_fk")
         )
+        @JsonIgnore
         private Resume resume;
 
         private String position;

@@ -72,6 +72,19 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(apiExceptionResponse, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiExceptionResponse> handleException(IllegalArgumentException e,
+                                                                HttpServletRequest request) {
+        ApiExceptionResponse apiExceptionResponse = new ApiExceptionResponse(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiExceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
     // Other errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiExceptionResponse> handleException(Exception e,

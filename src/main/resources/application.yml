@@ -48,3 +48,7 @@ springdoc:
 
 security:
   secret_key: cap9oWOVv6er2gx2GtbuTV7Q58nh6Y8HOeL5amzsextjZyaGIhAFmUGPcpxOyDwalAA59D2dPcc2Fnc7MK0HHG
+
+logging:
+  level:
+    web: debug
