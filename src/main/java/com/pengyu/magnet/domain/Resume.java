@@ -44,7 +44,7 @@ public class Resume {
 
     // One resume has multiple work experiences
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
-    private List<WorkExperience> workExperienceList;
+    private List<Experience> workExperienceList;
 
     // One resume has multiple skills
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
@@ -148,7 +148,7 @@ public class Resume {
     @Entity
     @Data
     @Table(name = "resume_work_experience")
-    public static class WorkExperience {
+    public static class Experience {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

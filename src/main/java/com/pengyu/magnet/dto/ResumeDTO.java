@@ -23,8 +23,8 @@ public class ResumeDTO {
 
     private ContactInformationDTO contact;
     private List<SkillDTO> skills;
-    private List<EducationDTO> educations;
-    private List<WorkExperienceDTO> workExperiences;
+    private List<EducationDTO> education;
+    private List<ExperienceDTO> experience;
 
     private Resume.Status status;
 
@@ -61,7 +61,7 @@ public class ResumeDTO {
     }
 
     @Data
-    public static class WorkExperienceDTO {
+    public static class ExperienceDTO {
 
         private Long id;
         private String position;

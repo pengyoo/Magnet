@@ -49,6 +49,19 @@ springdoc:
 security:
   secret_key: ${SECURITY_SECRET_KEY}
 
+aws:
+  region: eu-west-1
+  s3:
+    mock: false
+    buckets:
+      resume: elasticbeanstalk-eu-west-1-845708981828
+
+api:
+  resume:
+    parser:
+      url: https://api.apilayer.com/resume_parser/upload
+      key: ${RESUME_PARSER_API_KEY}
+
 logging:
   level:
     web: debug

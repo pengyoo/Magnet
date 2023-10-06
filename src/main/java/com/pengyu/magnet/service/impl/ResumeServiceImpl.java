@@ -102,15 +102,15 @@ public class ResumeServiceImpl implements ResumeService {
         for(var education: educationList){
             educationDTOS.add(EducationMapper.INSTANCE.mapEducationToEducationDTO(education));
         }
-        resumeDTO.setEducations(educationDTOS);
+        resumeDTO.setEducation(educationDTOS);
 
         // Map WorkExperience
-        List<Resume.WorkExperience> workExperienceList = resume.getWorkExperienceList();
-        List<ResumeDTO.WorkExperienceDTO> workExperienceDTOS = new ArrayList<>();
+        List<Resume.Experience> workExperienceList = resume.getWorkExperienceList();
+        List<ResumeDTO.ExperienceDTO> workExperienceDTOS = new ArrayList<>();
         for(var workExperience: workExperienceList){
-            workExperienceDTOS.add(WorkExperienceMapper.INSTANCE.mapWorkExperienceToWorkExperienceDTO(workExperience));
+            workExperienceDTOS.add(ExperienceMapper.INSTANCE.mapWorkExperienceToWorkExperienceDTO(workExperience));
         }
-        resumeDTO.setWorkExperiences(workExperienceDTOS);
+        resumeDTO.setExperience(workExperienceDTOS);
 
         // Return
         return resumeDTO;
@@ -143,7 +143,7 @@ public class ResumeServiceImpl implements ResumeService {
 
         // Map Education
         List<Resume.Education> educationList = new ArrayList<>();
-        List<ResumeDTO.EducationDTO> educationDTOS =resumeDTO.getEducations();
+        List<ResumeDTO.EducationDTO> educationDTOS =resumeDTO.getEducation();
 
         for(var educationDTO: educationDTOS){
             Resume.Education education = EducationMapper.INSTANCE.mapEducationDTOToEducation(educationDTO);
@@ -153,10 +153,10 @@ public class ResumeServiceImpl implements ResumeService {
         resume.setEducationList(educationList);
 
         // Map WorkExperience
-        List<Resume.WorkExperience> workExperienceList = new ArrayList<>();
-        List<ResumeDTO.WorkExperienceDTO> workExperienceDTOS = resumeDTO.getWorkExperiences();
+        List<Resume.Experience> workExperienceList = new ArrayList<>();
+        List<ResumeDTO.ExperienceDTO> workExperienceDTOS = resumeDTO.getExperience();
         for(var workExperienceDTO: workExperienceDTOS){
-            Resume.WorkExperience workExperience = WorkExperienceMapper.INSTANCE.mapWorkExperienceDTOToWorkExperience(workExperienceDTO);
+            Resume.Experience workExperience = ExperienceMapper.INSTANCE.mapWorkExperienceDTOToWorkExperience(workExperienceDTO);
             workExperience.setResume(resume);
             workExperienceList.add(workExperience);
         }

@@ -85,6 +85,19 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(apiExceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiExceptionResponse> handleException(ApiException e,
+                                                                HttpServletRequest request) {
+        ApiExceptionResponse apiExceptionResponse = new ApiExceptionResponse(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiExceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     // Other errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiExceptionResponse> handleException(Exception e,
