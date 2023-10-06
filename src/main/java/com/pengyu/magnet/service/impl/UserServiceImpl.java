@@ -41,21 +41,11 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
                 .createdAt(LocalDateTime.now())
-                .status(User.Status.REGISTERED).build();
+                // During Dev stage, set default status to ACTIVE
+                .status(User.Status.ACTIVE).build();
         user =  userRepository.save(user);
 
         UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(user);
-
-        // Authenticate
-        String jwtToken = jwtService.generateToken(user);
-        userResponse.setToken(jwtToken);
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        registerRequest.getEmail(),
-                        registerRequest.getPassword()
-                )
-        );
-
         return userResponse;
     }
 

@@ -26,7 +26,7 @@ public class CompanyController {
      */
     @RolesAllowed(CONSTANTS.ROLE_COMPANY)
     @PostMapping("/save")
-    public CompanyResponse save(CompanyRequest companyRequest){
+    public CompanyResponse save(@RequestBody CompanyRequest companyRequest){
         return companyService.save(companyRequest);
     }
 

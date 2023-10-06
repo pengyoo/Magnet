@@ -1,9 +1,11 @@
 package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
-import com.pengyu.magnet.dto.CompanyResponse;
+import com.pengyu.magnet.domain.JobApplication;
+import com.pengyu.magnet.dto.JobApplicationResponse;
 import com.pengyu.magnet.dto.JobRequest;
 import com.pengyu.magnet.dto.JobResponse;
+import com.pengyu.magnet.service.JobApplicationService;
 import com.pengyu.magnet.service.JobService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +18,19 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/jobs")
-public class JobController {
-    private final JobService jobService;
+@RequestMapping("/api/v1/applications")
+public class JobApplicationController {
+    private final JobApplicationService jobApplicationService;
 
     /**
      * Add or Edit job info
-     * @param jobRequest
+     * @param jobId
      * @return
      */
-    @RolesAllowed(CONSTANTS.ROLE_COMPANY)
-    @PostMapping("/save")
-    public JobResponse save(@RequestBody JobRequest jobRequest){
-        return jobService.save(jobRequest);
+    @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER})
+    @PostMapping("/apply")
+    public JobApplicationResponse apply(Long jobId){
+        return jobApplicationService.apply(jobId);
     }
 
     /**
@@ -37,8 +39,8 @@ public class JobController {
      * @return
      */
     @GetMapping("/{id}")
-    public JobResponse find(@PathVariable Long id){
-        return jobService.find(id);
+    public JobApplicationResponse find(@PathVariable Long id){
+        return jobApplicationService.find(id);
     }
 
     /**
@@ -50,17 +52,24 @@ public class JobController {
      * @return list of JobResponse
      */
     @GetMapping()
-    public List<JobResponse> findAll(@RequestParam(required = false, defaultValue = "0") int page,
+    @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
+    public List<JobApplicationResponse> findAll(@RequestParam(required = false, defaultValue = "0") int page,
                                          @RequestParam(required = false, defaultValue = "10") int pageSize,
                                          @RequestParam(required = false, defaultValue = "id") String orderBy,
                                          @RequestParam(required = false, defaultValue = "desc") String order,
-                                         @RequestParam (required = false) Long companyId
+                                         @RequestParam (required = false) Long userId
                                      ){
         // process sort factor
         Sort sort = "desc".equals(order) ? Sort.by(orderBy).descending() : Sort.by(orderBy).ascending();
         // create pageable
         Pageable pageable = PageRequest.of(page, pageSize, sort);
-        return jobService.findAll(pageable, companyId);
+        return jobApplicationService.findAll(pageable, userId);
+    }
+
+    @PostMapping("/{id}")
+    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    public void modifyState(@RequestParam JobApplication.Status status, @PathVariable Long id){
+        jobApplicationService.modifyState(id, status);
     }
 
 }
