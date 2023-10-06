@@ -2,7 +2,7 @@ package com.pengyu.magnet.service.impl;
 
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.ResumeParserService;
+import com.pengyu.magnet.service.ResumeParserAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,15 +20,15 @@ import java.io.IOException;
  */
 @Service
 @RequiredArgsConstructor
-public class ResumeParserServiceImpl implements ResumeParserService {
+public class ResumeParserAPIServiceImpl implements ResumeParserAPIService {
     private final UserRepository userRepository;
 
     // API URL
-    @Value("${api.resume.parser.url}")
+    @Value("${apilayer.resume.parser.url}")
     private String apiUrl;
 
     // API Key
-    @Value("${api.resume.parser.key}")
+    @Value("${apilayer.key}")
     private String key;
 
     /**

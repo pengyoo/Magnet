@@ -56,11 +56,13 @@ aws:
     buckets:
       resume: elasticbeanstalk-eu-west-1-845708981828
 
-api:
+apilayer:
+  key: ${RESUME_PARSER_API_KEY}
   resume:
     parser:
       url: https://api.apilayer.com/resume_parser/upload
-      key: ${RESUME_PARSER_API_KEY}
+  skills:
+    url: https://api.apilayer.com/skills
 
 logging:
   level:
