@@ -1,7 +1,7 @@
 
 spring:
-#  config:
-#    import: optional:file:.env[.properties]
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/magnet
@@ -47,7 +47,7 @@ springdoc:
 
 
 security:
-  secret_key: cap9oWOVv6er2gx2GtbuTV7Q58nh6Y8HOeL5amzsextjZyaGIhAFmUGPcpxOyDwalAA59D2dPcc2Fnc7MK0HHG
+  secret_key: ${SECURITY_SECRET_KEY}
 
 logging:
   level:
