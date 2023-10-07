@@ -61,8 +61,10 @@ public class TestPaperServiceImpl implements TestPaperService {
                 question.getOptionList().forEach(optionAnswer -> optionAnswer.setQuestion(question));
         }
 
+        TestPaperDTO testPaperDTONew = TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaperRepository.save(testPaper));
+        testPaperDTONew.setJobId(job.getId());
 
-        return TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaperRepository.save(testPaper));
+        return testPaperDTONew;
     }
 
     /**
