@@ -42,8 +42,15 @@ public class TestPaper {
     @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL)
     private List<Question> questionList;
 
+    private Status status;
+
     public enum Type {
         TECHNOLOGY,
         BEHAVIOUR
+    }
+
+    public enum Status {
+        ACTIVE,
+        INACTIVE
     }
 }
