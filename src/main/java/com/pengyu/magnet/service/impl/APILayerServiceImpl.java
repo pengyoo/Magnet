@@ -1,14 +1,10 @@
 package com.pengyu.magnet.service.impl;
 
 import com.pengyu.magnet.exception.ApiException;
-import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.ResumeParserAPIService;
+import com.pengyu.magnet.service.APILayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,12 +16,15 @@ import java.io.IOException;
  */
 @Service
 @RequiredArgsConstructor
-public class ResumeParserAPIServiceImpl implements ResumeParserAPIService {
-    private final UserRepository userRepository;
+public class APILayerServiceImpl implements APILayerService {
+
+    private final RestTemplate restTemplate;
 
     // API URL
     @Value("${apilayer.resume.parser.url}")
-    private String apiUrl;
+    private String resumeParserApiUrl;
+    @Value("${apilayer.skills.url}")
+    private String skillsApiUrl;
 
     // API Key
     @Value("${apilayer.key}")
@@ -38,8 +37,7 @@ public class ResumeParserAPIServiceImpl implements ResumeParserAPIService {
      * @throws IOException
      */
     @Override
-    public String parse(MultipartFile file) throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
+    public String parseResume(MultipartFile file) throws IOException {
 
         // Prepare the request headers
         HttpHeaders headers = new HttpHeaders();
@@ -53,7 +51,36 @@ public class ResumeParserAPIServiceImpl implements ResumeParserAPIService {
         HttpEntity<byte[]> requestEntity = new HttpEntity<>(fileBytes, headers);
 
         // Send POST request
-        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(resumeParserApiUrl, requestEntity, String.class);
+
+        // Success, return
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+
+        // Error, throw exception
+        throw new ApiException("An error occurred while calling the API");
+    }
+
+
+    /**
+     * Fetch Skills from APILayer
+     * @param skill
+     * @return
+     */
+    @Override
+    public String fetchSkills(String skill) {
+
+        // Prepare the request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", key);
+        String url = skillsApiUrl +"?q=" + skill;
+
+        // Create HttpEntity
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Send GET request
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
         // Success, return
         if (response.getStatusCode().is2xxSuccessful()) {
