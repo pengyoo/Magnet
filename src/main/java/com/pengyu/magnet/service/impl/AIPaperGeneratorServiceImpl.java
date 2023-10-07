@@ -3,12 +3,14 @@ package com.pengyu.magnet.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengyu.magnet.domain.Job;
+import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.dto.TestPaperDTO;
 import com.pengyu.magnet.dto.TestPaperGenerationRequest;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.langchan4j.AssessmentAgent;
 import com.pengyu.magnet.repository.JobRepository;
+import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.service.AIPaperGeneratorService;
 import com.pengyu.magnet.service.TestPaperService;
 import dev.langchain4j.model.input.Prompt;
@@ -16,6 +18,9 @@ import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,12 +30,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
     private final AssessmentAgent assessmentAgent;
-
     private final ObjectMapper objectMapper;
-
     private final TestPaperService testPaperService;
-
     private final JobRepository jobRepository;
+    private final UserRepository userRepository;
 
     // Prompt Template
     @StructuredPrompt({
@@ -60,7 +63,6 @@ public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
     @AllArgsConstructor
     static class CreateTestPrompt {
 
-
         private int generalNumber;
         private int languageNumber;
         private String language;
@@ -79,6 +81,16 @@ public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
         Job job = jobRepository
                 .findById(testPaperGenerationRequest.getJobId())
                 .orElseThrow(()->new ResourceNotFoundException("No such job found with id " + testPaperGenerationRequest.getJobId()));
+
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+
+        // Check if current user owns this job
+        if(!job.getCompany().getUser().getEmail().equals(user.getEmail())){
+            throw new InsufficientAuthenticationException("Sorry, you can not generate question for other user's job!");
+        }
 
         // Build prompt template
         CreateTestPrompt createTestPrompt =
