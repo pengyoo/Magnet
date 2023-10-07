@@ -20,7 +20,7 @@ public class Job {
     private Long id;
 
     // One company has multiple jobs
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(
             name = "company_id",
             referencedColumnName = "id",

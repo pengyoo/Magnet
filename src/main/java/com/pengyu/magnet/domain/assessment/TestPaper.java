@@ -1,6 +1,8 @@
 package com.pengyu.magnet.domain.assessment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pengyu.magnet.domain.Job;
+import com.pengyu.magnet.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,9 +20,10 @@ public class TestPaper {
 
     private Type type;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(
             name = "job_id",
             referencedColumnName = "id",
@@ -28,7 +31,15 @@ public class TestPaper {
     )
     private Job job;
 
-    @OneToMany(mappedBy = "testPaper")
+    @ManyToOne
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "paper_user_id_fk")
+    )
+    private User user;
+
+    @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL)
     private List<Question> questionList;
 
     public enum Type {

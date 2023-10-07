@@ -25,6 +25,7 @@ public class ResumeDTO {
     private List<SkillDTO> skills;
     private List<EducationDTO> education;
     private List<ExperienceDTO> experience;
+    private List<ProjectDTO> projects;
 
     private Resume.Status status;
 
@@ -70,6 +71,16 @@ public class ResumeDTO {
         private LocalDate endDate;
         private String description;
         private String location;
+    }
+
+    @Data
+    public static class ProjectDTO {
+
+        private Long id;
+        private String name;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String description;
     }
 
 }

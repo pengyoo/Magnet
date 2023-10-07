@@ -1,8 +1,13 @@
 package com.pengyu.magnet.domain.assessment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pengyu.magnet.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,22 +15,27 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "assessment_answer_sheet")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AnswerSheet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(
             name = "paper_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "answer_sheet_paper_id_fk")
     )
+    @JsonIgnore
     private TestPaper testPaper;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "id",
@@ -33,7 +43,7 @@ public class AnswerSheet {
     )
     private User user;
 
-    @OneToMany(mappedBy = "answerSheet")
+    @OneToMany(mappedBy = "answerSheet", cascade = CascadeType.ALL)
     private List<Answer> answerList;
 
 }

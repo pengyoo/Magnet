@@ -27,7 +27,7 @@ public class Resume {
     private String profile;
 
     // One JOB_SEEKER can have one RESUME
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "resume_user_id_fk")
@@ -49,6 +49,9 @@ public class Resume {
     // One resume has multiple skills
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
     private List<Skill> skillList;
+
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    private List<Project> projectList;
 
     private LocalDateTime createdAt;
 
@@ -104,7 +107,7 @@ public class Resume {
         private String skill;
 
         // One resume can have multiple Skills
-        @ManyToOne(cascade = CascadeType.ALL)
+        @ManyToOne
         @JoinColumn(
                 name = "resume_id",
                 referencedColumnName = "id",
@@ -127,7 +130,7 @@ public class Resume {
         private Long id;
 
         // One resume can have multiple educations
-        @ManyToOne(cascade = CascadeType.PERSIST)
+        @ManyToOne
         @JoinColumn(
                 name = "resume_id",
                 referencedColumnName = "id",
@@ -171,6 +174,32 @@ public class Resume {
         @Column(columnDefinition = "text")
         private String description;
         private String location;
+    }
+
+    @Entity
+    @Data
+    @Table(name = "resume_project")
+    public static class Project {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        // One resume has multiple work experiences
+        @ManyToOne
+        @JoinColumn(
+                name = "resume_id",
+                referencedColumnName = "id",
+                foreignKey = @ForeignKey(name = "project_resume_id_fk")
+        )
+        @JsonIgnore
+        private Resume resume;
+
+        private String name;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        @Column(columnDefinition = "text")
+        private String description;
     }
 
 }

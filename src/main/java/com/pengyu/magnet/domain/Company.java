@@ -20,7 +20,7 @@ public class Company {
     private String address;
 
     // One company belongs to one user account
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "company_user_id_fk")

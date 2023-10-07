@@ -112,6 +112,14 @@ public class ResumeServiceImpl implements ResumeService {
         }
         resumeDTO.setExperience(workExperienceDTOS);
 
+        // Map Project
+        List<Resume.Project> projectList = resume.getProjectList();
+        List<ResumeDTO.ProjectDTO> projectDTOS = new ArrayList<>();
+        for(var project: projectList){
+            projectDTOS.add(ProjectMapper.INSTANCE.mapProjectToProjectDTO(project));
+        }
+        resumeDTO.setProjects(projectDTOS);
+
         // Return
         return resumeDTO;
     }
@@ -161,6 +169,16 @@ public class ResumeServiceImpl implements ResumeService {
             workExperienceList.add(workExperience);
         }
         resume.setWorkExperienceList(workExperienceList);
+
+        // Map Project
+        List<Resume.Project> projectList = new ArrayList<>();
+        List<ResumeDTO.ProjectDTO> projectDTOS = resumeDTO.getProjects();
+        for(var projectDTO: projectDTOS){
+            Resume.Project project = ProjectMapper.INSTANCE.mapProjectDTOToProject(projectDTO);
+            project.setResume(resume);
+            projectList.add(project);
+        }
+        resume.setProjectList(projectList);
 
         // Return
         return resume;
