@@ -57,7 +57,8 @@ public class TestPaperServiceImpl implements TestPaperService {
         for(Question question : testPaper.getQuestionList()) {
             question.setTestPaper(testPaper);
             // Bind Question for every option
-            question.getOptionList().forEach(optionAnswer -> optionAnswer.setQuestion(question));
+            if(question.getOptionList() != null)
+                question.getOptionList().forEach(optionAnswer -> optionAnswer.setQuestion(question));
         }
 
 

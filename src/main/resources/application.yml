@@ -64,6 +64,27 @@ apilayer:
   skills:
     url: https://api.apilayer.com/skills
 
+
+langchain4j:
+  chat-model:
+    provider: openai
+    openai:
+      api-key: demo
+      model-name: gpt-3.5-turbo
+      temperature: 0.0
+#      top-p: 1.0
+#      max-tokens: 100
+#      presence-penalty: 0.0
+#      frequency-penalty: 0.0
+      timeout: PT60S
+#      max-retries: 3
+#      log-requests: true
+#      log-responses: true
+
 logging:
   level:
     web: debug
+    dev:
+      langchain4j: debug
+      ai4j:
+        openai4j: DEBUG
