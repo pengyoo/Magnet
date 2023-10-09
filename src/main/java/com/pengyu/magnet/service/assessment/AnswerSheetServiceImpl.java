@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.domain.assessment.Answer;
@@ -13,7 +13,7 @@ import com.pengyu.magnet.repository.assessment.AnswerRepository;
 import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
 import com.pengyu.magnet.repository.assessment.QuestionRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
-import com.pengyu.magnet.service.AnswerSheetService;
+import com.pengyu.magnet.service.assessment.AnswerSheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;

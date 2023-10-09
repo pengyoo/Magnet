@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service;
+package com.pengyu.magnet.service.user;
 
 import com.pengyu.magnet.dto.UserLoginRequest;
 import com.pengyu.magnet.dto.UserRegisterRequest;

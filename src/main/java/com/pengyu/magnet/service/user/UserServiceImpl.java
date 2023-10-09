@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.user;
 
 import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.dto.UserLoginRequest;
@@ -7,7 +7,6 @@ import com.pengyu.magnet.dto.UserResponse;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.security.JwtService;
-import com.pengyu.magnet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

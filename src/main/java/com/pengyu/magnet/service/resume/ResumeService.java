@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service;
+package com.pengyu.magnet.service.resume;
 
 import com.pengyu.magnet.dto.ResumeDTO;
 import org.springframework.data.domain.Pageable;

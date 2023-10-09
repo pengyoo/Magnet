@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service;
+package com.pengyu.magnet.service.api;
 
 import org.springframework.web.multipart.MultipartFile;
 

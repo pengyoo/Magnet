@@ -16,4 +16,12 @@ public class Langchain4JConfig {
                 .build();
     }
 
+    @Bean
+    MatchAgent matchAgent(ChatLanguageModel chatLanguageModel) {
+        return AiServices.builder(MatchAgent.class)
+                .chatLanguageModel(chatLanguageModel)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
+                .build();
+    }
+
 }

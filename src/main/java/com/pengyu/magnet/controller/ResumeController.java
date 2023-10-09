@@ -2,7 +2,7 @@ package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.ResumeDTO;
-import com.pengyu.magnet.service.ResumeService;
+import com.pengyu.magnet.service.resume.ResumeService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service;
+package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.dto.AnswerDTO;
 import com.pengyu.magnet.dto.AnswerSheetDTO;

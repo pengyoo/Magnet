@@ -12,10 +12,13 @@ public class MagnetApplication {
         SpringApplication.run(MagnetApplication.class, args);
     }
 
+    /**
+     * Create TestTemplate for external API calling
+     * @return
+     */
     @Bean
     public RestTemplate restTemplate(){
         RestTemplate template = new RestTemplate();
-        //customize
         return template;
     }
 

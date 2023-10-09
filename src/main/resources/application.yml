@@ -16,6 +16,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
   servlet:
     multipart:
       max-file-size: 5MB
@@ -68,8 +69,10 @@ apilayer:
 langchain4j:
   chat-model:
     provider: openai
+#    provider: huggingface
     openai:
-      api-key: demo
+      url: https://openkey.cloud
+      api-key: ${OPEN_AI_API_KEY}
       model-name: gpt-3.5-turbo
       temperature: 0.0
 #      top-p: 1.0
@@ -80,6 +83,12 @@ langchain4j:
 #      max-retries: 3
 #      log-requests: true
 #      log-responses: true
+    huggingface:
+      access-token: ${HUGGINGFACE_ACCESS_TOKEN}
+      model-name: mistralai/Mistral-7B-v0.1
+#      temperature: 0.0
+#      timeout: PT60S
+
 
 logging:
   level:

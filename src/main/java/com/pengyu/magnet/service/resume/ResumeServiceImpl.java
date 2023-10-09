@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.resume;
 
 import com.pengyu.magnet.domain.Resume;
 import com.pengyu.magnet.domain.User;
@@ -7,7 +7,6 @@ import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.*;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +79,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param resume
      * @return
      */
-    private ResumeDTO mapResumeToResumeDTO(Resume resume){
+    public static ResumeDTO mapResumeToResumeDTO(Resume resume){
 
         //Map Resume
         ResumeDTO resumeDTO = ResumeMapper.INSTANCE.mapResumeToResumeDTO(resume);
@@ -130,7 +129,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param resumeDTO
      * @return
      */
-    private Resume mapResumeDTOToResume(ResumeDTO resumeDTO){
+    public static Resume mapResumeDTOToResume(ResumeDTO resumeDTO){
 
         //Map Resume
         Resume resume = ResumeMapper.INSTANCE.mapResumeDTOToResume(resumeDTO);

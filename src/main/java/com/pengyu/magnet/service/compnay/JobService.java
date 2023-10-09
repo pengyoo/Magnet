@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service;
+package com.pengyu.magnet.service.compnay;
 
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.dto.JobRequest;

@@ -1,10 +1,9 @@
 package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
-import com.pengyu.magnet.dto.CompanyResponse;
 import com.pengyu.magnet.dto.JobRequest;
 import com.pengyu.magnet.dto.JobResponse;
-import com.pengyu.magnet.service.JobService;
+import com.pengyu.magnet.service.compnay.JobService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

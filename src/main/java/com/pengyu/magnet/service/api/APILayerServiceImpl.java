@@ -1,7 +1,6 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.api;
 
 import com.pengyu.magnet.exception.ApiException;
-import com.pengyu.magnet.service.APILayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

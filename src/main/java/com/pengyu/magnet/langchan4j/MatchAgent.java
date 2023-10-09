@@ -3,10 +3,10 @@ package com.pengyu.magnet.langchan4j;
 
 import dev.langchain4j.service.SystemMessage;
 
-public interface AssessmentAgent {
+public interface MatchAgent {
 
     @SystemMessage({
-            "You are a recruitment assistant helping the recruiter generate online assessment questions"
+            "You are a recruitment assistant helping the recruiter match the job seekers and positions."
     })
     String chat(String userMessage);
 }

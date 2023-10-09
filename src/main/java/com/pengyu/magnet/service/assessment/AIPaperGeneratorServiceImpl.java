@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.assessment;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,8 @@ import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.langchan4j.AssessmentAgent;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.AIPaperGeneratorService;
-import com.pengyu.magnet.service.TestPaperService;
+import com.pengyu.magnet.service.assessment.AIPaperGeneratorService;
+import com.pengyu.magnet.service.assessment.TestPaperService;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.input.structured.StructuredPromptProcessor;

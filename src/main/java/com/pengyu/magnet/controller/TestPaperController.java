@@ -1,11 +1,10 @@
 package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
-import com.pengyu.magnet.dto.AnswerSheetDTO;
 import com.pengyu.magnet.dto.TestPaperDTO;
 import com.pengyu.magnet.dto.TestPaperGenerationRequest;
-import com.pengyu.magnet.service.AIPaperGeneratorService;
-import com.pengyu.magnet.service.TestPaperService;
+import com.pengyu.magnet.service.assessment.AIPaperGeneratorService;
+import com.pengyu.magnet.service.assessment.TestPaperService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

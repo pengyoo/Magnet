@@ -3,7 +3,7 @@ package com.pengyu.magnet.controller;
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.CompanyRequest;
 import com.pengyu.magnet.dto.CompanyResponse;
-import com.pengyu.magnet.service.CompanyService;
+import com.pengyu.magnet.service.compnay.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

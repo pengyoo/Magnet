@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.compnay;
 
 import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.User;
@@ -9,7 +9,7 @@ import com.pengyu.magnet.mapper.CompanyMapper;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.CompanyService;
+import com.pengyu.magnet.service.compnay.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

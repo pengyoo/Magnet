@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.User;
@@ -10,7 +10,7 @@ import com.pengyu.magnet.mapper.TestPaperMapper;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
-import com.pengyu.magnet.service.TestPaperService;
+import com.pengyu.magnet.service.assessment.TestPaperService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;

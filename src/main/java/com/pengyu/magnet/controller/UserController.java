@@ -4,7 +4,7 @@ package com.pengyu.magnet.controller;
 import com.pengyu.magnet.dto.UserLoginRequest;
 import com.pengyu.magnet.dto.UserRegisterRequest;
 import com.pengyu.magnet.dto.UserResponse;
-import com.pengyu.magnet.service.UserService;
+import com.pengyu.magnet.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

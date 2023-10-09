@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.impl;
+package com.pengyu.magnet.service.compnay;
 
 import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.Job;
@@ -11,7 +11,7 @@ import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.JobService;
+import com.pengyu.magnet.service.compnay.JobService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
