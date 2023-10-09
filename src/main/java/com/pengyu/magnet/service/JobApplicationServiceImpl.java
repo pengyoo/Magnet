@@ -108,12 +108,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      */
     @Override
     public List<JobApplicationResponse> findAll(Pageable pageable, Long userId) {
-        // Get Current login user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
 
-        Page<JobApplication> jobApplications = jobApplicationRepository.findByUserId(pageable, user.getId());
+        if(userId != null) {
+            Page<JobApplication> jobApplications = jobApplicationRepository.findByUserId(pageable, userId);
+            return jobApplications.map(jobApplication -> mapJobApplicationToJobApplicationResponse(jobApplication)).toList();
+        }
+
+        Page<JobApplication> jobApplications = jobApplicationRepository.findAll(pageable);
         return jobApplications.map(jobApplication -> mapJobApplicationToJobApplicationResponse(jobApplication)).toList();
     }
 
@@ -141,6 +142,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         jobApplication.setStatus(status);
         jobApplicationRepository.save(jobApplication);
+    }
+
+    @Override
+    public long count(Long userId) {
+        if(userId != null)
+            return jobApplicationRepository.countByUserId(userId);
+        return jobApplicationRepository.count();
     }
 
     /**

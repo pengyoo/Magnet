@@ -10,4 +10,6 @@ public interface CompanyService {
     CompanyResponse save(CompanyRequest companyRequest);
     CompanyResponse find(Long id);
     List<CompanyResponse> findAll(Pageable pageable);
+
+    long count();
 }

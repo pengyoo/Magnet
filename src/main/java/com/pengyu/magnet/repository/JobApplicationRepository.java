@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
     Page<JobApplication> findByUserId(Pageable pageable, Long id);
+
+    long countByUserId(Long userId);
 }

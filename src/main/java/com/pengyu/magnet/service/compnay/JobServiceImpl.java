@@ -126,4 +126,11 @@ public class JobServiceImpl implements JobService {
             return jobResponse;
         }).toList();
     }
+
+    @Override
+    public long count(Long companyId) {
+        if(companyId != null)
+            return jobRepository.countByCompanyId(companyId);
+        return jobRepository.count();
+    }
 }

@@ -8,6 +8,7 @@ import com.pengyu.magnet.domain.assessment.TestPaper;
 import com.pengyu.magnet.dto.AnswerDTO;
 import com.pengyu.magnet.dto.AnswerSheetDTO;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
+import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.AnswerRepository;
 import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
@@ -15,6 +16,7 @@ import com.pengyu.magnet.repository.assessment.QuestionRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import com.pengyu.magnet.service.assessment.AnswerSheetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,18 +81,34 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No such Answer Sheet found with id " + id));
 
-        return mapToAnswerSheetDTO(answerSheet);
+        AnswerSheetDTO answerSheetDTO =  mapToAnswerSheetDTO(answerSheet);
+        answerSheetDTO.setUserResponse(UserMapper.INSTANCE.mapUserToUserResponse(answerSheet.getUser()));
+        return answerSheetDTO;
     }
 
     @Override
-    public List<AnswerSheetDTO> findAllByCurrentUser(Pageable pageable) {
-        // Get Current login user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
+    public List<AnswerSheetDTO> findAll(Pageable pageable, Long userId) {
+        if(userId != null) {
+            // Get Current login user
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            User user = userRepository.findByEmail(email);
 
-        List<AnswerSheet> answerSheets = answerSheetRepository.findAllByUser(pageable, user);
-        return answerSheets.stream().map(answerSheet -> mapToAnswerSheetDTO(answerSheet)).collect(Collectors.toList());
+            List<AnswerSheet> answerSheets = answerSheetRepository.findAllByUser(pageable, user);
+            return answerSheets.stream().map(answerSheet -> {
+                AnswerSheetDTO answerSheetDTO =  mapToAnswerSheetDTO(answerSheet);
+                answerSheetDTO.setUserResponse(UserMapper.INSTANCE.mapUserToUserResponse(user));
+                return answerSheetDTO;
+            }).collect(Collectors.toList());
+        }
+
+        Page<AnswerSheet> answerSheets = answerSheetRepository.findAll(pageable);
+        return answerSheets.stream().map(answerSheet -> {
+            AnswerSheetDTO answerSheetDTO =  mapToAnswerSheetDTO(answerSheet);
+            answerSheetDTO.setUserResponse(UserMapper.INSTANCE.mapUserToUserResponse(answerSheet.getUser()));
+            return answerSheetDTO;
+        }).collect(Collectors.toList());
+
     }
 
     /**
@@ -144,6 +162,14 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                     .build();
             answerRepository.save(answer);
         }
+    }
+
+    @Override
+    public long count(Long userId) {
+        if(userId != null){
+            return answerSheetRepository.countByUserId(userId);
+        }
+        return answerSheetRepository.count();
     }
 }
 

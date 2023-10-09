@@ -9,4 +9,6 @@ public interface ResumeService {
     ResumeDTO save(ResumeDTO resumeRequest);
     ResumeDTO find(Long id);
     List<ResumeDTO> findAll(Pageable pageable);
+
+    long count();
 }

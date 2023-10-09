@@ -1,6 +1,7 @@
 package com.pengyu.magnet.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pengyu.magnet.domain.Company;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,6 +20,6 @@ public class JobRequest {
     private String description;
     private String salaryRange;
     private String location;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expireAt;
 }

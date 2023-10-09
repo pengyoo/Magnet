@@ -12,4 +12,6 @@ import java.util.List;
 @Repository
 public interface AnswerSheetRepository extends JpaRepository<AnswerSheet, Long> {
     List<AnswerSheet> findAllByUser(Pageable pageable, User user);
+
+    long countByUserId(Long userId);
 }

@@ -80,6 +80,11 @@ public class ResumeServiceImpl implements ResumeService {
         return resumes.map(resume -> mapResumeToResumeDTO(resume)).toList();
     }
 
+    @Override
+    public long count() {
+        return resumeRepository.count();
+    }
+
     /**
      * Map resume to dto
      * @param resume

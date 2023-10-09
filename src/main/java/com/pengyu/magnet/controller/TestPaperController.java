@@ -6,6 +6,7 @@ import com.pengyu.magnet.dto.TestPaperGenerationRequest;
 import com.pengyu.magnet.service.assessment.AIPaperGeneratorService;
 import com.pengyu.magnet.service.assessment.TestPaperService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import java.util.List;
  * Test Paper Controller
  */
 @RestController
-@RequestMapping("/api/v1/assess/paper")
+@RequestMapping("/api/v1/papers")
 @RequiredArgsConstructor
 public class TestPaperController {
     private final TestPaperService testPaperService;
@@ -35,17 +36,33 @@ public class TestPaperController {
         return testPaperService.save(testPaperDTO);
     }
 
+    @GetMapping("/{id}")
+    public TestPaperDTO find(@PathVariable Long id){
+        return testPaperService.find(id);
+    }
+
     @GetMapping
-    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
-    public List<TestPaperDTO> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                        @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                        @RequestParam(required = false, defaultValue = "id") String orderBy,
-                                        @RequestParam(required = false, defaultValue = "desc") String order){
+//    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    public List<TestPaperDTO> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
+                                      @RequestParam(defaultValue = "10", required = false) Integer _end,
+                                      @RequestParam(defaultValue = "id", required = false) String sort,
+                                      @RequestParam(defaultValue = "desc", required = false) String order,
+                                      @RequestParam(required = false) Long userId,
+                                      HttpServletResponse response){
         // process sort factor
-        Sort sort = "desc".equals(order) ? Sort.by(orderBy).descending() : Sort.by(orderBy).ascending();
+        Sort sortBy = "desc".equals(order) ? Sort.by(sort).descending() : Sort.by(sort).ascending();
+
         // create pageable
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
-        return testPaperService.findAllByCurrentUser(pageable);
+        int pageSize = _end - _start;
+        int page = _start / (pageSize - 1);
+        Pageable pageable = PageRequest.of(page, pageSize, sortBy);
+
+        // Set Header
+        String count = String.valueOf(testPaperService.count(userId));
+        response.addHeader("x-total-count", count);
+        response.addHeader("Access-Control-Expose-Headers", "x-total-count");
+
+        return testPaperService.findAll(pageable, userId);
     }
 
     /**

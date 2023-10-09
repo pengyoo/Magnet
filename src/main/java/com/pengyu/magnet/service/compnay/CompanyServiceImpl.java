@@ -94,4 +94,9 @@ public class CompanyServiceImpl implements CompanyService {
             return companyResponse;
         }).toList();
     }
+
+    @Override
+    public long count() {
+        return companyRepository.count();
+    }
 }

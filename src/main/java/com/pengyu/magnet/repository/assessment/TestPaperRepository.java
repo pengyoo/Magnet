@@ -12,4 +12,6 @@ import java.util.List;
 @Repository
 public interface TestPaperRepository extends JpaRepository<TestPaper, Long> {
     Page<TestPaper> findAllByUser(Pageable pageable, User user);
+
+    long countByUserId(Long userId);
 }

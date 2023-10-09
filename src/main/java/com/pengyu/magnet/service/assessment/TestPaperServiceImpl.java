@@ -85,15 +85,32 @@ public class TestPaperServiceImpl implements TestPaperService {
      * @return
      */
     @Override
-    public List<TestPaperDTO> findAllByCurrentUser(Pageable pageable) {
-        // Get Current login user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
+    public List<TestPaperDTO> findAll(Pageable pageable, Long userId) {
+
+        // If userId is not null, fetch by currentUser
+        if(userId != null) {
+            // Get Current login user
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            User user = userRepository.findByEmail(email);
+
+            return testPaperRepository
+                    .findAllByUser(pageable, user)
+                    .map(testPaper -> TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaper))
+                    .toList();
+        }
 
         return testPaperRepository
-                .findAllByUser(pageable, user)
+                .findAll(pageable)
                 .map(testPaper -> TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaper))
                 .toList();
+    }
+
+    @Override
+    public long count(Long userId) {
+        if(userId != null){
+            return testPaperRepository.countByUserId(userId);
+        }
+        return testPaperRepository.count();
     }
 }

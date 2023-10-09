@@ -4,6 +4,7 @@ import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.service.resume.ResumeService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +20,24 @@ public class ResumeController {
     private final ResumeService resumeService;
 
     /**
-     * Save resume info
+     * Add resume info
      * @param resumeRequest
      * @return
      */
-    @RolesAllowed(CONSTANTS.ROLE_JOB_SEEKER)
-    @PostMapping("/save")
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
+    @PostMapping
     public ResumeDTO save(@RequestBody ResumeDTO resumeRequest){
+        return resumeService.save(resumeRequest);
+    }
+
+    /**
+     * Edit resume info
+     * @param resumeRequest
+     * @return
+     */
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
+    @PatchMapping("/{id}")
+    public ResumeDTO patch(@RequestBody ResumeDTO resumeRequest){
         return resumeService.save(resumeRequest);
     }
 
@@ -41,21 +53,31 @@ public class ResumeController {
 
     /**
      * Find resumes
-     * @param page
-     * @param pageSize
-     * @param orderBy
+     * @param _start
+     * @param _end
+     * @param sort
      * @param order
      * @return list of resumes
      */
     @GetMapping()
-    public List<ResumeDTO> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                         @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                         @RequestParam(required = false, defaultValue = "id") String orderBy,
-                                         @RequestParam(required = false, defaultValue = "desc") String order){
+    public List<ResumeDTO> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
+                                   @RequestParam(defaultValue = "10", required = false) Integer _end,
+                                   @RequestParam(defaultValue = "id", required = false) String sort,
+                                   @RequestParam(defaultValue = "desc", required = false) String order,
+                                   HttpServletResponse response){
         // process sort factor
-        Sort sort = "desc".equals(order) ? Sort.by(orderBy).descending() : Sort.by(orderBy).ascending();
+        Sort sortBy = "desc".equals(order) ? Sort.by(sort).descending() : Sort.by(sort).ascending();
+
         // create pageable
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        int pageSize = _end - _start;
+        int page = _start / (pageSize - 1);
+        Pageable pageable = PageRequest.of(page, pageSize, sortBy);
+
+        // Set Header
+        String count = String.valueOf(resumeService.count());
+        response.addHeader("x-total-count", count);
+        response.addHeader("Access-Control-Expose-Headers", "x-total-count");
+
         return resumeService.findAll(pageable);
     }
 

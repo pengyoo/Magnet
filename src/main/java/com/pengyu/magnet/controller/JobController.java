@@ -5,6 +5,7 @@ import com.pengyu.magnet.dto.JobRequest;
 import com.pengyu.magnet.dto.JobResponse;
 import com.pengyu.magnet.service.compnay.JobService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +25,15 @@ public class JobController {
      * @param jobRequest
      * @return
      */
-    @RolesAllowed(CONSTANTS.ROLE_COMPANY)
-    @PostMapping("/save")
+    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    @PostMapping
+
     public JobResponse save(@RequestBody JobRequest jobRequest){
+        return jobService.save(jobRequest);
+    }
+    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    @PatchMapping("/{id}")
+    public JobResponse patch(@RequestBody JobRequest jobRequest){
         return jobService.save(jobRequest);
     }
 
@@ -42,23 +49,32 @@ public class JobController {
 
     /**
      * Find jobs
-     * @param page
-     * @param pageSize
-     * @param orderBy
+     * @param _start
+     * @param _end
+     * @param sortBy
      * @param order
      * @return list of JobResponse
      */
     @GetMapping()
-    public List<JobResponse> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                         @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                         @RequestParam(required = false, defaultValue = "id") String orderBy,
-                                         @RequestParam(required = false, defaultValue = "desc") String order,
-                                         @RequestParam (required = false) Long companyId
+    public List<JobResponse> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
+                                     @RequestParam(defaultValue = "10", required = false) Integer _end,
+                                     @RequestParam(defaultValue = "id", required = false) String sortBy,
+                                     @RequestParam(defaultValue = "desc", required = false) String order,
+                                     HttpServletResponse response,
+                                     @RequestParam (required = false) Long companyId
                                      ){
         // process sort factor
-        Sort sort = "desc".equals(order) ? Sort.by(orderBy).descending() : Sort.by(orderBy).ascending();
+        Sort sort = "desc".equals(order) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         // create pageable
+        int pageSize = _end - _start;
+        int page = _start / (pageSize - 1);
         Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        // Set Header
+        String count = String.valueOf(jobService.count(companyId));
+        response.addHeader("x-total-count", count);
+        response.addHeader("Access-Control-Expose-Headers", "x-total-count");
+
         return jobService.findAll(pageable, companyId);
     }
 

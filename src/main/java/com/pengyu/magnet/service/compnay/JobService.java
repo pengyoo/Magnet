@@ -13,4 +13,6 @@ public interface JobService {
     List<JobResponse> findAll(Pageable pageable);
 
     List<JobResponse> findAll(Pageable pageable, Long companyId);
+
+    long count(Long companyId);
 }
