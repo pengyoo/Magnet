@@ -33,6 +33,6 @@ public class ResumeInsights {
     @JsonIgnore
     private Resume resume;
 
-    @OneToMany(mappedBy = "resumeInsights", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resumeInsights", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skill> skills;
 }

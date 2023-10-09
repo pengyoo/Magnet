@@ -7,6 +7,7 @@ import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.*;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,8 @@ public class ResumeServiceImpl implements ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
 
+    private final AsyncTaskService asynTaskService;
+
     /**
      * Add or Edit Resume
      * @param resumeRequest
@@ -46,6 +49,9 @@ public class ResumeServiceImpl implements ResumeService {
         resume.setCreatedAt(LocalDateTime.now());
         // Save
         resume = resumeRepository.save(resume);
+
+        // Async Task: AI extract resume insights
+        asynTaskService.asyncExtractResumeInsights( resume.getId());
 
         return mapResumeToResumeDTO(resume);
     }

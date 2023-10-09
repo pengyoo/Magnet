@@ -11,7 +11,7 @@ import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.compnay.JobService;
+import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +28,8 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+
+    private final AsyncTaskService asynTaskService;
 
     /**
      * Add or Edit Job
@@ -55,8 +57,15 @@ public class JobServiceImpl implements JobService {
         // Set default values
         job.setCreatedAt(LocalDateTime.now());
 
+        // Set default status: Active
+        job.setStatus(Job.Status.ACTIVE);
+
         // save
         job = jobRepository.save(job);
+
+        // Async Task: AI extract Resume Insights
+        Job finalJob = job;
+        asynTaskService.asyncExtractJobRequirements(job.getId());
 
         // map job to dto
         JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);

@@ -1,6 +1,7 @@
 package com.pengyu.magnet.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -15,6 +16,8 @@ public class MatchingIndexDTO {
     private float language;
     private float overall;
 
+    @JsonProperty("job")
     private JobResponse jobResponse;
+    @JsonProperty("resume")
     private ResumeDTO resumeDTO;
 }

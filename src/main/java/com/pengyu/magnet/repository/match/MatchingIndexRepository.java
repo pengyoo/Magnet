@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface MatchingIndexRepository extends JpaRepository<MatchingIndex, Long> {
-    Optional<JobRequirements> findByJobId(Long jobId);
+    Optional<MatchingIndex> findByJobIdAndResumeId(Long jobId, Long resumeId);
 }

@@ -32,6 +32,6 @@ public class JobRequirements {
     )
     @JsonIgnore
     private Job job;
-    @OneToMany(mappedBy = "jobRequirements", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "jobRequirements", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skill> skills;
 }

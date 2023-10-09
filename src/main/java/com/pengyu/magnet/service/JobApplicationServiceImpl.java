@@ -15,7 +15,7 @@ import com.pengyu.magnet.repository.JobApplicationRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.JobApplicationService;
+import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +41,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     private final ResumeRepository resumeRepository;
 
+    private final AsyncTaskService asynTaskService;
+
+    /**
+     * Apply a job
+     * @param jobId
+     * @return
+     */
     @Override
     public JobApplicationResponse apply(Long jobId) {
         // Get Current login user
@@ -73,6 +80,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         // Save
         jobApplication = jobApplicationRepository.save(jobApplication);
+
+        // Async Task: AI match job and resume
+        asynTaskService.asyncMatchJobAndResume(jobId, resume.getId());
 
         return mapJobApplicationToJobApplicationResponse(jobApplication);
     }

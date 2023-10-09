@@ -20,8 +20,6 @@ import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.match.MatchingIndexRepository;
-import com.pengyu.magnet.service.compnay.JobService;
-import com.pengyu.magnet.service.resume.ResumeService;
 import com.pengyu.magnet.service.resume.ResumeServiceImpl;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
@@ -31,16 +29,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * AI Test Paper Generator Service
+ * OpenAI Job and Resume Match Service
  */
 @Service
 @RequiredArgsConstructor
 public class OpenAIMatchServiceImpl implements AIMatchService {
     private final MatchAgent matchAgent;
     private final ObjectMapper objectMapper;
-    private final JobService jobService;
-
-    private final ResumeService resumeService;
     private final JobRepository jobRepository;
     private final ResumeRepository resumeRepository;
 
@@ -173,7 +168,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
 //                    .orElseThrow(() -> new ResourceNotFoundException("No such job found with id " + jobId));
 
             // Get Job info
-            JobResponse jobResponse = jobService.find(jobId);
+            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(jobRepository.findById(jobId).orElse(null));
             // Build prompt template
             JobRequirementsExtractionPrompt jobRequirementsExtractionPrompt =
                     new JobRequirementsExtractionPrompt(objectMapper.writeValueAsString(jobResponse));
@@ -185,10 +180,16 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             String json = matchAgent.chat(prompt.toUserMessage().text());
 
             // Parse return json
-            JobRequirements jobRequirements = objectMapper.readValue(json, JobRequirements.class);
+            JobRequirements jobRequirementsNew = objectMapper.readValue(json, JobRequirements.class);
+
+            // Check if jobRequirements already exist
+            JobRequirements jobRequirements = jobRequirementsService.findByJobId(jobId);
+            if(jobRequirements != null) {
+                jobRequirementsNew.setId(jobRequirements.getId());
+            }
 
             // Save to Data
-            JobRequirements saved = jobRequirementsService.save(jobRequirements, jobId);
+            JobRequirements saved = jobRequirementsService.save(jobRequirementsNew, jobId);
 
             return saved;
 
@@ -207,8 +208,10 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
      */
     public ResumeInsights extractResumeInsights(Long resumeId) {
         try {
+
+
             // Get Resume info
-            ResumeDTO resume = resumeService.find(resumeId);
+            ResumeDTO resume = ResumeServiceImpl.mapResumeToResumeDTO(resumeRepository.findById(resumeId).orElse(null));
 
             // Build prompt template
             ResumeExtractionPrompt resumeExtractionPrompt =
@@ -221,7 +224,13 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             String json = matchAgent.chat(prompt.toUserMessage().text());
 
             // Parse return json
-            ResumeInsights resumeInsights = objectMapper.readValue(json, ResumeInsights.class);
+            ResumeInsights resumeInsightsNew = objectMapper.readValue(json, ResumeInsights.class);
+
+            // Check if ResumeInsights already exist
+            ResumeInsights resumeInsights = resumeInsightsService.findByResumeId(resumeId);
+            if(resumeInsights != null) {
+                resumeInsightsNew.setId(resumeInsights.getId());
+            }
 
             // Save to database
             ResumeInsights saved = resumeInsightsService.save(resumeInsights, resumeId);
@@ -283,6 +292,20 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
         } catch (JsonProcessingException e) {
             throw new ApiException(e.getMessage());
         }
+    }
+
+    @Override
+    public MatchingIndexDTO find(Long jobId, Long resumeId) {
+        MatchingIndex matchingIndex =
+                matchingIndexRepository
+                        .findByJobIdAndResumeId(jobId, resumeId)
+                        .orElseThrow(() -> new ResourceNotFoundException("No such MatchingIndex found with jobId %s and resumeId %s".formatted(jobId, resumeId)));
+                ;
+        // return
+        MatchingIndexDTO matchingIndexDTO = MatchingIndexMapper.INSTANCE.mapMatchingIndexToMatchingIndexDTO(matchingIndex);
+        matchingIndexDTO.setResumeDTO(ResumeServiceImpl.mapResumeToResumeDTO(matchingIndex.getResume()));
+        matchingIndexDTO.setJobResponse(JobMapper.INSTANCE.mapJobToJobResponse(matchingIndex.getJob()));
+        return matchingIndexDTO;
     }
 
     /**

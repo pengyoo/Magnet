@@ -58,4 +58,15 @@ public class AIMatchController {
         return aiMatchService.match(jobId, resumeId);
     }
 
+    /**
+     * Find Matching Index
+     * @param jobId
+     * @param resumeId
+     * @return
+     */
+    @GetMapping("/find")
+    public MatchingIndexDTO find(@RequestParam Long jobId, @RequestParam Long resumeId) {
+        return aiMatchService.find(jobId, resumeId);
+    }
+
 }

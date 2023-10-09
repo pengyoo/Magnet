@@ -44,6 +44,6 @@ public class JobRequirementsServiceImpl implements JobRequirementsService {
     public JobRequirements findByJobId(Long jobId) {
         return jobRequirementsRepository
                 .findByJobId(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("No such JobRequirements found with job id "+ jobId));
+                .orElse(null);
     }
 }
