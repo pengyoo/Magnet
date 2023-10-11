@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class MatchingIndexDTO {
+    private Long id;
     private float degree;
     private float major;
     private float experience;

@@ -17,6 +17,8 @@ public class Company {
     private String name;
     @Column(columnDefinition = "text")
     private String description;
+    private String country;
+    private String city;
     private String address;
 
     // One company belongs to one user account

@@ -26,7 +26,10 @@ import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * OpenAI Job and Resume Match Service
@@ -307,6 +310,12 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
         matchingIndexDTO.setJobResponse(JobMapper.INSTANCE.mapJobToJobResponse(matchingIndex.getJob()));
         return matchingIndexDTO;
     }
+
+
+
+
+
+
 
     /**
      * Call AI API, extract skills from job description
