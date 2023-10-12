@@ -27,7 +27,7 @@ public class Skill {
 
     @ManyToOne
     @JoinColumn(
-            name = "resume_characteristics_id",
+            name = "resume_insights_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "skill_resume_insights_id_fk")
     )

@@ -58,13 +58,17 @@ aws:
     buckets:
       resume: elasticbeanstalk-eu-west-1-845708981828
 
-apilayer:
-  key: ${RESUME_PARSER_API_KEY}
-  resume:
-    parser:
+external:
+  apilayer:
+    key: ${RESUME_PARSER_API_KEY}
+    resume_parser:
       url: https://api.apilayer.com/resume_parser/upload
-  skills:
-    url: https://api.apilayer.com/skills
+    skills:
+      url: https://api.apilayer.com/skills
+  countries:
+    url: https://restcountries.com/v3.1/all?fields=name
+  cities:
+    url: https://countriesnow.space/api/v0.1/countries/cities
 
 
 langchain4j:

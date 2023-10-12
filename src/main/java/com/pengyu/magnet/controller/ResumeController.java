@@ -24,11 +24,21 @@ public class ResumeController {
      * @param resumeRequest
      * @return
      */
-    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
     @PostMapping
     public ResumeDTO save(@RequestBody ResumeDTO resumeRequest){
         return resumeService.save(resumeRequest);
     }
+
+    /**
+     * Find resume by id
+     * @return
+     */
+    @GetMapping("/my")
+    public ResumeDTO findMy(){
+        return resumeService.findMyResume();
+    }
+
 
     /**
      * Edit resume info

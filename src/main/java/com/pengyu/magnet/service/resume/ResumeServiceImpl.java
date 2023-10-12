@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @return
      */
     @Override
+    @Transactional
     public ResumeDTO save(ResumeDTO resumeRequest) {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,7 +53,7 @@ public class ResumeServiceImpl implements ResumeService {
         resume = resumeRepository.save(resume);
 
         // Async Task: AI extract resume insights
-        asynTaskService.asyncExtractResumeInsights( resume.getId());
+        asynTaskService.asyncExtractResumeInsights(resume.getId());
 
         return mapResumeToResumeDTO(resume);
     }
@@ -83,6 +85,19 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public long count() {
         return resumeRepository.count();
+    }
+
+    @Override
+    public ResumeDTO findMyResume() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        Resume resume = resumeRepository.findByUserId(user.getId()).orElse(null);
+        if(resume == null)
+            return null;
+
+        return mapResumeToResumeDTO(resume);
     }
 
     /**

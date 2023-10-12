@@ -1,12 +1,15 @@
 package com.pengyu.magnet.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pengyu.magnet.domain.Resume;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * ResumeDTO
@@ -41,12 +44,15 @@ public class ResumeDTO {
         private String postCode;
         private String linkedInUrl;
 
+        private String key = UUID.randomUUID().toString();
+
     }
 
     @Data
     public static class SkillDTO {
         private Long id;
         private String skill;
+        private String key = UUID.randomUUID().toString();
     }
 
 
@@ -59,6 +65,7 @@ public class ResumeDTO {
         private String major;
         private LocalDate startDate;
         private LocalDate endDate;
+        private String key = UUID.randomUUID().toString();
     }
 
     @Data
@@ -71,6 +78,7 @@ public class ResumeDTO {
         private LocalDate endDate;
         private String description;
         private String location;
+        private String key = UUID.randomUUID().toString();
     }
 
     @Data
@@ -78,9 +86,10 @@ public class ResumeDTO {
 
         private Long id;
         private String name;
-        private LocalDate startDate;
-        private LocalDate endDate;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
         private String description;
+        private String key = UUID.randomUUID().toString();
     }
 
 }

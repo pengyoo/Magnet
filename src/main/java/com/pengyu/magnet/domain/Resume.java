@@ -35,22 +35,22 @@ public class Resume {
     private User user;
 
     // One Resume has one contact info
-    @OneToOne(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ContactInformation contactInformation;
 
     // One resume has multiple education experiences
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Education> educationList;
 
     // One resume has multiple work experiences
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Experience> workExperienceList;
 
     // One resume has multiple skills
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skill> skillList;
 
-    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Project> projectList;
 
     private LocalDateTime createdAt;
@@ -91,6 +91,20 @@ public class Resume {
                 foreignKey = @ForeignKey(name = "contact_resume_id_fk")
         )
         private Resume resume;
+
+        @Override
+        public String toString() {
+            return "ContactInformation{" +
+                    "id=" + id +
+                    ", phoneNumber='" + phoneNumber + '\'' +
+                    ", email='" + email + '\'' +
+                    ", address='" + address + '\'' +
+                    ", city='" + city + '\'' +
+                    ", country='" + country + '\'' +
+                    ", postCode='" + postCode + '\'' +
+                    ", linkedInUrl='" + linkedInUrl + '\'' +
+                    '}';
+        }
     }
 
     /**
@@ -115,6 +129,14 @@ public class Resume {
         )
         @JsonIgnore
         private Resume resume;
+
+        @Override
+        public String toString() {
+            return "Skill{" +
+                    "id=" + id +
+                    ", skill='" + skill + '\'' +
+                    '}';
+        }
     }
 
     /**
@@ -143,6 +165,18 @@ public class Resume {
         private String major;
         private LocalDate startDate;
         private LocalDate endDate;
+
+        @Override
+        public String toString() {
+            return "Education{" +
+                    "id=" + id +
+                    ", schoolName='" + schoolName + '\'' +
+                    ", degree='" + degree + '\'' +
+                    ", major='" + major + '\'' +
+                    ", startDate=" + startDate +
+                    ", endDate=" + endDate +
+                    '}';
+        }
     }
 
     /**
@@ -174,6 +208,19 @@ public class Resume {
         @Column(columnDefinition = "text")
         private String description;
         private String location;
+
+        @Override
+        public String toString() {
+            return "Experience{" +
+                    "id=" + id +
+                    ", position='" + position + '\'' +
+                    ", companyName='" + companyName + '\'' +
+                    ", startDate=" + startDate +
+                    ", endDate=" + endDate +
+                    ", description='" + description + '\'' +
+                    ", location='" + location + '\'' +
+                    '}';
+        }
     }
 
     @Entity
@@ -196,10 +243,38 @@ public class Resume {
         private Resume resume;
 
         private String name;
-        private LocalDate startDate;
-        private LocalDate endDate;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
         @Column(columnDefinition = "text")
         private String description;
+
+
+        @Override
+        public String toString() {
+            return "Project{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", startDate=" + startDate +
+                    ", endDate=" + endDate +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", profile='" + profile + '\'' +
+                ", user=" + user +
+                ", contactInformation=" + contactInformation +
+                ", educationList=" + educationList +
+                ", workExperienceList=" + workExperienceList +
+                ", skillList=" + skillList +
+                ", projectList=" + projectList +
+                ", createdAt=" + createdAt +
+                ", status=" + status +
+                '}';
+    }
 }

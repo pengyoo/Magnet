@@ -11,4 +11,6 @@ public interface ResumeService {
     List<ResumeDTO> findAll(Pageable pageable);
 
     long count();
+
+    ResumeDTO findMyResume();
 }
