@@ -12,4 +12,6 @@ public interface CompanyService {
     List<CompanyResponse> findAll(Pageable pageable);
 
     long count();
+
+    CompanyResponse findCurrentCompany();
 }

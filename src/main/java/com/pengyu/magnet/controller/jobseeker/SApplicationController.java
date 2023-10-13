@@ -16,8 +16,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/my_applications")
-public class ApplicationController {
+@RequestMapping("/api/v1/spplications")
+public class SApplicationController {
     private final JobApplicationService jobApplicationService;
 
     /**
@@ -37,6 +37,7 @@ public class ApplicationController {
      * @return
      */
     @GetMapping("/{id}")
+    @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER})
     public JobApplicationResponse find(@PathVariable Long id){
         return jobApplicationService.find(id);
     }
@@ -72,11 +73,4 @@ public class ApplicationController {
 
         return jobApplicationService.findAllByCurrentUser(pageable);
     }
-
-    @PostMapping("/{id}")
-    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
-    public void modifyState(@RequestParam JobApplication.Status status, @PathVariable Long id){
-        jobApplicationService.modifyState(id, status);
-    }
-
 }

@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Company business layer
@@ -98,5 +99,25 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public long count() {
         return companyRepository.count();
+    }
+
+    /**
+     * Find current company
+     * @return
+     */
+    @Override
+    public CompanyResponse findCurrentCompany() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+
+        Company company = companyRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Current longin user doesn't create compnay information."));
+        CompanyResponse companyResponse = CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(company);
+        companyResponse.setUserData(UserMapper.INSTANCE.mapUserToUserResponse(company.getUser()));
+        return companyResponse;
+
     }
 }

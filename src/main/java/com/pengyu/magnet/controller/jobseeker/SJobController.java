@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("jobSeekerJobController")
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/explore_jobs")
-public class JobController {
+@RequestMapping("/api/v1/sjobs")
+public class SJobController {
     private final JobService jobService;
 
     /**

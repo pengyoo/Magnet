@@ -20,18 +20,7 @@ import java.util.List;
 public class JobController {
     private final JobService jobService;
 
-    /**
-     * Add or Edit job info
-     * @param jobRequest
-     * @return
-     */
-    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
-    @PostMapping
-
-    public JobResponse save(@RequestBody JobRequest jobRequest){
-        return jobService.save(jobRequest);
-    }
-    @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed({CONSTANTS.ROLE_ADMIN})
     @PatchMapping("/{id}")
     public JobResponse patch(@RequestBody JobRequest jobRequest){
         return jobService.save(jobRequest);

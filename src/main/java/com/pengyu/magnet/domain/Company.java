@@ -15,11 +15,14 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Column(columnDefinition = "text")
-    private String description;
     private String country;
     private String city;
     private String address;
+    private int scale;
+    private String industry;
+
+    @Column(columnDefinition = "text")
+    private String description;
 
     // One company belongs to one user account
     @OneToOne

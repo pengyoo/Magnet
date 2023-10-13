@@ -20,43 +20,12 @@ public class ResumeController {
     private final ResumeService resumeService;
 
     /**
-     * Add resume info
-     * @param resumeRequest
-     * @return
-     */
-    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
-    @PostMapping
-    public ResumeDTO save(@RequestBody ResumeDTO resumeRequest){
-        return resumeService.save(resumeRequest);
-    }
-
-    /**
-     * Find resume by id
-     * @return
-     */
-    @GetMapping("/my")
-    public ResumeDTO findMy(){
-        return resumeService.findMyResume();
-    }
-
-
-    /**
-     * Edit resume info
-     * @param resumeRequest
-     * @return
-     */
-    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
-    @PatchMapping("/{id}")
-    public ResumeDTO patch(@RequestBody ResumeDTO resumeRequest){
-        return resumeService.save(resumeRequest);
-    }
-
-    /**
      * Find resume by id
      * @param id
      * @return
      */
     @GetMapping("/{id}")
+    @RolesAllowed({CONSTANTS.ROLE_ADMIN, CONSTANTS.ROLE_COMPANY})
     public ResumeDTO find(@PathVariable Long id){
         return resumeService.find(id);
     }
@@ -70,6 +39,7 @@ public class ResumeController {
      * @return list of resumes
      */
     @GetMapping()
+    @RolesAllowed({CONSTANTS.ROLE_ADMIN, CONSTANTS.ROLE_COMPANY})
     public List<ResumeDTO> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
                                    @RequestParam(defaultValue = "10", required = false) Integer _end,
                                    @RequestParam(defaultValue = "id", required = false) String sort,

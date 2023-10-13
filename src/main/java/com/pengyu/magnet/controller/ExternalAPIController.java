@@ -2,6 +2,7 @@ package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.service.api.ExternalAPIService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,9 @@ public class ExternalAPIController {
     private final ExternalAPIService externalAPIService;
 
     @GetMapping("skills")
-    public String fetch(@RequestParam("skill") String skill){
+    public String fetch(@RequestParam(value = "skill", required = false) String skill){
+        if(StringUtils.isBlank(skill))
+            return "[]";
         return externalAPIService.fetchSkills(skill);
     }
 

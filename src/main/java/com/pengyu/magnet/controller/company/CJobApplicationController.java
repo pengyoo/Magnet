@@ -1,4 +1,4 @@
-package com.pengyu.magnet.controller;
+package com.pengyu.magnet.controller.company;
 
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.domain.JobApplication;
@@ -16,19 +16,9 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/applications")
-public class JobApplicationController {
+@RequestMapping("/api/v1/capplications")
+public class CJobApplicationController {
     private final JobApplicationService jobApplicationService;
-
-    /**
-     * Find job by id
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public JobApplicationResponse find(@PathVariable Long id){
-        return jobApplicationService.find(id);
-    }
 
     /**
      * Find jobs
@@ -38,6 +28,7 @@ public class JobApplicationController {
      * @param order
      * @return list of JobResponse
      */
+    // TODO find all by company
     @GetMapping()
     @RolesAllowed(value = {CONSTANTS.ROLE_ADMIN})
     public List<JobApplicationResponse> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
