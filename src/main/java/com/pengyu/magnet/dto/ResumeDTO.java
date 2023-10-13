@@ -86,8 +86,8 @@ public class ResumeDTO {
 
         private Long id;
         private String name;
-        private LocalDateTime startDate;
-        private LocalDateTime endDate;
+        private LocalDate startDate;
+        private LocalDate endDate;
         private String description;
         private String key = UUID.randomUUID().toString();
     }

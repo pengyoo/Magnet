@@ -243,8 +243,8 @@ public class Resume {
         private Resume resume;
 
         private String name;
-        private LocalDateTime startDate;
-        private LocalDateTime endDate;
+        private LocalDate startDate;
+        private LocalDate endDate;
         @Column(columnDefinition = "text")
         private String description;
 
