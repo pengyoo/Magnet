@@ -13,6 +13,7 @@ import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -123,6 +124,32 @@ public class JobServiceImpl implements JobService {
         return jobs.map(job -> {
             // map job to dto
             JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
+            jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+            return jobResponse;
+        }).toList();
+    }
+
+    /**
+     * Search By title
+     * @param pageable
+     * @param title_like
+     * @return
+     */
+    @Override
+    public List<JobResponse> findAll(Pageable pageable, String title_like) {
+        Page<Job> jobs;
+
+        if(StringUtils.isBlank(title_like))
+            return findAll(pageable);
+            // If comapnyId is not null, find jobs of this company
+        else
+            title_like = "%"+title_like+"%";
+            jobs = jobRepository.findAllByTitleLike(pageable, title_like);
+
+        return jobs.map(job -> {
+            // map job to dto
+            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
+            jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
             return jobResponse;
         }).toList();
     }
@@ -132,5 +159,19 @@ public class JobServiceImpl implements JobService {
         if(companyId != null)
             return jobRepository.countByCompanyId(companyId);
         return jobRepository.count();
+    }
+
+    @Override
+    public long count() {
+        return jobRepository.count();
+    }
+
+    @Override
+    public long count(String title) {
+        if(StringUtils.isBlank(title)) {
+            return jobRepository.count();
+        }
+        title = "%"+title+"%";
+        return jobRepository.countByTitleLike(title);
     }
 }

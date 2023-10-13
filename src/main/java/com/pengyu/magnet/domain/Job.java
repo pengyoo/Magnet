@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Data
-@Table(name = "job")
+// Add Index for title
+@Table(name = "job", indexes = @Index(columnList="title"))
 public class Job {
 
     @Id
@@ -27,6 +28,7 @@ public class Job {
             foreignKey = @ForeignKey(name = "job_company_id_fk")
     )
     private Company company;
+
     private String title;
 
     @Column(columnDefinition = "text")

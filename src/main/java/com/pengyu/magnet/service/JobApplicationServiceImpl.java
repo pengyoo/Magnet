@@ -4,10 +4,12 @@ import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.JobApplication;
 import com.pengyu.magnet.domain.Resume;
 import com.pengyu.magnet.domain.User;
+import com.pengyu.magnet.dto.CompanyResponse;
 import com.pengyu.magnet.dto.JobApplicationResponse;
 import com.pengyu.magnet.dto.JobResponse;
 import com.pengyu.magnet.dto.UserResponse;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
+import com.pengyu.magnet.mapper.CompanyMapper;
 import com.pengyu.magnet.mapper.JobApplicationMapper;
 import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.UserMapper;
@@ -119,6 +121,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     /**
+     * Find Job Application by current login user
+     * @param pageable
+     * @return
+     */
+    @Override
+    public List<JobApplicationResponse> findAllByCurrentUser(Pageable pageable) {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+
+        return findAll(pageable, user.getId());
+    }
+
+    /**
      * Change the state of job application
      * @param id
      * @param status
@@ -145,10 +162,16 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public long count(Long userId) {
-        if(userId != null)
-            return jobApplicationRepository.countByUserId(userId);
+    public long count() {
         return jobApplicationRepository.count();
+    }
+    @Override
+    public long countByCurrentUser() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        return jobApplicationRepository.countByUserId(user.getId());
     }
 
     /**
@@ -157,7 +180,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @return
      */
     private JobApplicationResponse mapJobApplicationToJobApplicationResponse(JobApplication jobApplication){
+        CompanyResponse companyResponse = CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(jobApplication.getJob().getCompany());
         JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(jobApplication.getJob());
+        jobResponse.setCompanyData(companyResponse);
         UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(jobApplication.getUser());
         JobApplicationResponse jobApplicationResponse = JobApplicationMapper.INSTANCE.mapJobApplicationToJobApplicationResponse(jobApplication);
         jobApplicationResponse.setJobData(jobResponse);

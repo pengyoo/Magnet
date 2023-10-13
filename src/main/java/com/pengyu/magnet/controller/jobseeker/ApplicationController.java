@@ -1,4 +1,4 @@
-package com.pengyu.magnet.controller;
+package com.pengyu.magnet.controller.jobseeker;
 
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.domain.JobApplication;
@@ -16,11 +16,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/applications")
-public class JobApplicationController {
+@RequestMapping("/api/v1/my_applications")
+public class ApplicationController {
     private final JobApplicationService jobApplicationService;
 
-
+    /**
+     * Add or Edit job info
+     * @param jobId
+     * @return
+     */
+    @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER})
+    @PostMapping("/apply")
+    public JobApplicationResponse apply(Long jobId){
+        return jobApplicationService.apply(jobId);
+    }
 
     /**
      * Find job by id
@@ -41,7 +50,7 @@ public class JobApplicationController {
      * @return list of JobResponse
      */
     @GetMapping()
-    @RolesAllowed(value = {CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER})
     public List<JobApplicationResponse> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
                                                 @RequestParam(defaultValue = "10", required = false) Integer _end,
                                                 @RequestParam(defaultValue = "id", required = false) String sort,
@@ -57,11 +66,11 @@ public class JobApplicationController {
         Pageable pageable = PageRequest.of(page, pageSize, sortBy);
 
         // Set Header
-        String count = String.valueOf(jobApplicationService.count());
+        String count = String.valueOf(jobApplicationService.countByCurrentUser());
         response.addHeader("x-total-count", count);
         response.addHeader("Access-Control-Expose-Headers", "x-total-count");
 
-        return jobApplicationService.findAll(pageable, null);
+        return jobApplicationService.findAllByCurrentUser(pageable);
     }
 
     @PostMapping("/{id}")

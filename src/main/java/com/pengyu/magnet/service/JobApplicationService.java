@@ -12,8 +12,11 @@ public interface JobApplicationService {
     JobApplicationResponse find(Long id);
 
     List<JobApplicationResponse> findAll(Pageable pageable, Long userId);
+    List<JobApplicationResponse> findAllByCurrentUser(Pageable pageable);
 
     void modifyState(Long id, JobApplication.Status status);
 
-    long count(Long userId);
+    long countByCurrentUser();
+    long count();
+
 }

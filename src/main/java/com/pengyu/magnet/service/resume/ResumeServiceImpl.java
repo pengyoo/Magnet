@@ -93,10 +93,9 @@ public class ResumeServiceImpl implements ResumeService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
-        Resume resume = resumeRepository.findByUserId(user.getId()).orElse(null);
-        if(resume == null)
-            return null;
-
+        Resume resume = resumeRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Current user doesn't create a resume"));
         return mapResumeToResumeDTO(resume);
     }
 

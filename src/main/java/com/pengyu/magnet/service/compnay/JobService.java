@@ -13,6 +13,9 @@ public interface JobService {
     List<JobResponse> findAll(Pageable pageable);
 
     List<JobResponse> findAll(Pageable pageable, Long companyId);
+    List<JobResponse> findAll(Pageable pageable, String title_like);
 
     long count(Long companyId);
+    long count();
+    long count(String title);
 }
