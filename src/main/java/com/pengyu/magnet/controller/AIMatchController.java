@@ -2,21 +2,13 @@ package com.pengyu.magnet.controller;
 
 
 import com.pengyu.magnet.config.CONSTANTS;
-import com.pengyu.magnet.domain.match.JobRequirements;
-import com.pengyu.magnet.domain.match.MatchingIndex;
+import com.pengyu.magnet.domain.match.JobInsights;
 import com.pengyu.magnet.domain.match.ResumeInsights;
-import com.pengyu.magnet.dto.AnswerSheetDTO;
 import com.pengyu.magnet.dto.MatchingIndexDTO;
 import com.pengyu.magnet.service.match.AIMatchService;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * AI Match Controller, used to match Resume and Job using AI
@@ -40,8 +32,8 @@ public class AIMatchController {
      */
     @GetMapping("/extract_job")
     @RolesAllowed({CONSTANTS.ROLE_ADMIN})
-    public JobRequirements extractJob(@RequestParam Long jobId) {
-        return aiMatchService.extractJobRequirements(jobId);
+    public JobInsights extractJob(@RequestParam Long jobId) {
+        return aiMatchService.extractJobInsights(jobId);
     }
 
     /**

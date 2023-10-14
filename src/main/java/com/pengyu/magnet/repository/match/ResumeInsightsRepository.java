@@ -1,6 +1,5 @@
 package com.pengyu.magnet.repository.match;
 
-import com.pengyu.magnet.domain.match.JobRequirements;
 import com.pengyu.magnet.domain.match.ResumeInsights;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

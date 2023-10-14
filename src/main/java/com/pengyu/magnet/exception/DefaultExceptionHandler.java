@@ -91,11 +91,11 @@ public class DefaultExceptionHandler {
         ApiExceptionResponse apiExceptionResponse = new ApiExceptionResponse(
                 request.getRequestURI(),
                 e.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now()
         );
 
-        return new ResponseEntity<>(apiExceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiExceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     // Other errors

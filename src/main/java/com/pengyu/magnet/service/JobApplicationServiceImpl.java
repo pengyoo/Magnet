@@ -8,6 +8,7 @@ import com.pengyu.magnet.dto.CompanyResponse;
 import com.pengyu.magnet.dto.JobApplicationResponse;
 import com.pengyu.magnet.dto.JobResponse;
 import com.pengyu.magnet.dto.UserResponse;
+import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.CompanyMapper;
 import com.pengyu.magnet.mapper.JobApplicationMapper;
@@ -56,6 +57,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
+
+        // Check if the user applied this job
+        JobApplication ja = jobApplicationRepository.findByUserIdAndJobId(user.getId(), jobId);
+        if(ja != null) {
+            throw new ApiException("Sorry, you've already applied for this job!");
+        }
 
         // Get Resume of current User
         Resume resume = resumeRepository

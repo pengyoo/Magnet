@@ -14,4 +14,6 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     Page<JobApplication> findByUserId(Pageable pageable, Long id);
 
     long countByUserId(Long userId);
+
+    JobApplication findByUserIdAndJobId(Long id, Long jobId);
 }

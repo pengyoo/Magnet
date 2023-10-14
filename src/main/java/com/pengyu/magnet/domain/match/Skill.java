@@ -1,7 +1,6 @@
 package com.pengyu.magnet.domain.match;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pengyu.magnet.domain.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,12 +17,12 @@ public class Skill {
 
     @ManyToOne
     @JoinColumn(
-            name = "job_requirements_id",
+            name = "job_insights_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "skill_job_requirements_id_fk")
+            foreignKey = @ForeignKey(name = "skill_job_insights_id_fk")
     )
     @JsonIgnore
-    private JobRequirements jobRequirements;
+    private JobInsights jobInsights;
 
     @ManyToOne
     @JoinColumn(

@@ -12,8 +12,8 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "match_job_requirement")
-public class JobRequirements {
+@Table(name = "match_job_insights")
+public class JobInsights {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ public class JobRequirements {
     @OneToOne
     @JoinColumn(name = "job_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "job_requirement_job_id_fk")
+            foreignKey = @ForeignKey(name = "job_insights_job_id_fk")
     )
     @JsonIgnore
     private Job job;
-    @OneToMany(mappedBy = "jobRequirements", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "jobInsights", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skill> skills;
 }

@@ -40,7 +40,7 @@ public class ResumeInsightsServiceImpl implements ResumeInsightsService {
     public ResumeInsights findByResumeId(Long resumeId) {
         return resumeInsightsRepository
                 .findByResumeId(resumeId)
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("No such ResumeInsights found with resumeId " +resumeId));
 
     }
 }

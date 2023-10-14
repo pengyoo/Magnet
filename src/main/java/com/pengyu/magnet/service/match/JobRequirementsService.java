@@ -1,9 +1,9 @@
 package com.pengyu.magnet.service.match;
 
-import com.pengyu.magnet.domain.match.JobRequirements;
+import com.pengyu.magnet.domain.match.JobInsights;
 
 public interface JobRequirementsService {
-    JobRequirements save(JobRequirements jobRequirements, Long jobId);
-    JobRequirements findByJobId(Long jobId);
+    JobInsights save(JobInsights jobRequirements, Long jobId);
+    JobInsights findByJobId(Long jobId);
 
 }

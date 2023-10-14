@@ -14,7 +14,7 @@ public class AsyncTaskService {
 
     @Async
     public void asyncExtractJobRequirements(Long jobId) {
-         aiMatchService.extractJobRequirements(jobId);
+         aiMatchService.extractJobInsights(jobId);
     }
 
     @Async

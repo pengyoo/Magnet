@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/spplications")
+@RequestMapping("/api/v1/sapplications")
 public class SApplicationController {
     private final JobApplicationService jobApplicationService;
 
@@ -26,8 +26,8 @@ public class SApplicationController {
      * @return
      */
     @RolesAllowed(value = {CONSTANTS.ROLE_JOB_SEEKER})
-    @PostMapping("/apply")
-    public JobApplicationResponse apply(Long jobId){
+    @PostMapping("/apply/{jobId}")
+    public JobApplicationResponse apply(@PathVariable Long jobId){
         return jobApplicationService.apply(jobId);
     }
 

@@ -1,7 +1,7 @@
 package com.pengyu.magnet.service.match;
 
 import com.pengyu.magnet.domain.Job;
-import com.pengyu.magnet.domain.match.JobRequirements;
+import com.pengyu.magnet.domain.match.JobInsights;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.match.JobRequirementsRepository;
@@ -19,7 +19,7 @@ public class JobRequirementsServiceImpl implements JobRequirementsService {
 
     private final JobRepository jobRepository;
     @Override
-    public JobRequirements save(JobRequirements jobRequirements, Long jobId) {
+    public JobInsights save(JobInsights jobRequirements, Long jobId) {
 
         // Find Job
         Job job = jobRepository
@@ -30,7 +30,7 @@ public class JobRequirementsServiceImpl implements JobRequirementsService {
         jobRequirements.setJob(job);
 
         // Bind Skills with jobRequirements
-        jobRequirements.getSkills().forEach(skill -> skill.setJobRequirements(jobRequirements));
+        jobRequirements.getSkills().forEach(skill -> skill.setJobInsights(jobRequirements));
 
         return jobRequirementsRepository.save(jobRequirements);
     }
@@ -41,9 +41,9 @@ public class JobRequirementsServiceImpl implements JobRequirementsService {
      * @return
      */
     @Override
-    public JobRequirements findByJobId(Long jobId) {
+    public JobInsights findByJobId(Long jobId) {
         return jobRequirementsRepository
                 .findByJobId(jobId)
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("No such JobRequirements found with jobId " +jobId));
     }
 }

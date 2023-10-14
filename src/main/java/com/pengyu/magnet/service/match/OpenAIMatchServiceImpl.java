@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.Resume;
-import com.pengyu.magnet.domain.match.JobRequirements;
+import com.pengyu.magnet.domain.match.JobInsights;
 import com.pengyu.magnet.domain.match.MatchingIndex;
 import com.pengyu.magnet.domain.match.ResumeInsights;
 import com.pengyu.magnet.dto.JobResponse;
@@ -26,10 +26,7 @@ import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * OpenAI Job and Resume Match Service
@@ -51,7 +48,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
 
     // Prompt Template
     @StructuredPrompt({
-            "Please extract software development technology skills such as programming language, libraries, concepts, software, methdologies needed for this job from the job description.  Every skill should be an independent technology.",
+            "Please extract software development technology skills such as programming language, libraries, concepts, software, methdologies needed for this job from the job description. Every skill should be an independent technology.",
             "Job Description: {{jobDescription}}",
             "Structure your answer in the following way:",
             """
@@ -98,7 +95,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             """
     })
     @AllArgsConstructor
-    static class JobRequirementsExtractionPrompt {
+    static class JobInsightsExtractionPrompt {
         private String jobDescription;
     }
 
@@ -128,12 +125,12 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             """
     })
     @AllArgsConstructor
-    static class ResumeExtractionPrompt {
+    static class ResumeInsightsExtractionPrompt {
         private String resume;
     }
 
     @StructuredPrompt({
-            "Please calculate the match between the Resume and the job based on the ResumeInsights and the JobRequirements, with the result as a decimal indicating the percentage of the Resume that meets the requirements of the job description.",
+            "Please calculate the match between the Resume and the job based on the ResumeInsights and the JobInsights, with the result as a decimal indicating the percentage of the Resume that meets the requirements of the job description.",
             "The calculation contains the following data:",
             "degree: degree match",
             "major: major match",
@@ -141,9 +138,9 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             "experience: Experience Matching Degree",
             "language: language match",
             "overall: overall match",
-            "Each data is a decimal, ranging from 0 to 1, with two decimal places. If there is no specified requirement JobRequirements, the value should be 1. \n",
+            "Each data is a decimal, ranging from 0 to 1, with two decimal places. If there is no specified requirement in JobInsights, the value should be 1. \n",
             "ResumeInsights: {{resumeInsights}}",
-            "JobRequirements: {{jobRequirements}}",
+            "JobInsights: {{jobInsights}}",
             "Structure your answer in the following way:",
             """
                {
@@ -162,19 +159,19 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
         private String jobRequirements;
     }
 
-    public JobRequirements extractJobRequirements(Long jobId) {
+    public JobInsights extractJobInsights(Long jobId) {
         try {
 
             // Get Job info
-//            Job job = jobRepository
-//                    .findById(jobId)
-//                    .orElseThrow(() -> new ResourceNotFoundException("No such job found with id " + jobId));
+            Job job = jobRepository
+                    .findById(jobId)
+                    .orElseThrow(() -> new ResourceNotFoundException("No such job found with id " + jobId));
+            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
 
-            // Get Job info
-            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(jobRepository.findById(jobId).orElse(null));
+
             // Build prompt template
-            JobRequirementsExtractionPrompt jobRequirementsExtractionPrompt =
-                    new JobRequirementsExtractionPrompt(objectMapper.writeValueAsString(jobResponse));
+            JobInsightsExtractionPrompt jobRequirementsExtractionPrompt =
+                    new JobInsightsExtractionPrompt(objectMapper.writeValueAsString(jobResponse));
 
             // Render template
             Prompt prompt = StructuredPromptProcessor.toPrompt(jobRequirementsExtractionPrompt);
@@ -183,16 +180,16 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             String json = matchAgent.chat(prompt.toUserMessage().text());
 
             // Parse return json
-            JobRequirements jobRequirementsNew = objectMapper.readValue(json, JobRequirements.class);
+            JobInsights jobRequirementsNew = objectMapper.readValue(json, JobInsights.class);
 
             // Check if jobRequirements already exist
-            JobRequirements jobRequirements = jobRequirementsService.findByJobId(jobId);
+            JobInsights jobRequirements = jobRequirementsService.findByJobId(jobId);
             if(jobRequirements != null) {
                 jobRequirementsNew.setId(jobRequirements.getId());
             }
 
             // Save to Data
-            JobRequirements saved = jobRequirementsService.save(jobRequirementsNew, jobId);
+            JobInsights saved = jobRequirementsService.save(jobRequirementsNew, jobId);
 
             return saved;
 
@@ -214,11 +211,12 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
 
 
             // Get Resume info
-            ResumeDTO resume = ResumeServiceImpl.mapResumeToResumeDTO(resumeRepository.findById(resumeId).orElse(null));
+            ResumeDTO resume = ResumeServiceImpl
+                    .mapResumeToResumeDTO(resumeRepository.findById(resumeId).orElseThrow(() -> new ResourceNotFoundException("No such ResumeInsights found with resumeId " + resumeId)));
 
             // Build prompt template
-            ResumeExtractionPrompt resumeExtractionPrompt =
-                    new ResumeExtractionPrompt(objectMapper.writeValueAsString(resume));
+            ResumeInsightsExtractionPrompt resumeExtractionPrompt =
+                    new ResumeInsightsExtractionPrompt(objectMapper.writeValueAsString(resume));
 
             // Render template
             Prompt prompt = StructuredPromptProcessor.toPrompt(resumeExtractionPrompt);
@@ -256,13 +254,13 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     public MatchingIndexDTO match(Long jobId, Long resumeId) {
         try {
             // Get Job info
-            JobRequirements jobRequirements = jobRequirementsService.findByJobId(jobId);
+            JobInsights jobInsights = jobRequirementsService.findByJobId(jobId);
             // Get Resume Info
             ResumeInsights resumeInsights = resumeInsightsService.findByResumeId(resumeId);
 
             // Build prompt template
             JobResumeMatchingPrompt resumeExtractionPrompt =
-                    new JobResumeMatchingPrompt(objectMapper.writeValueAsString(jobRequirements), objectMapper.writeValueAsString(resumeInsights));
+                    new JobResumeMatchingPrompt(objectMapper.writeValueAsString(jobInsights), objectMapper.writeValueAsString(resumeInsights));
 
             // Render template
             Prompt prompt = StructuredPromptProcessor.toPrompt(resumeExtractionPrompt);
@@ -310,11 +308,6 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
         matchingIndexDTO.setJobResponse(JobMapper.INSTANCE.mapJobToJobResponse(matchingIndex.getJob()));
         return matchingIndexDTO;
     }
-
-
-
-
-
 
 
     /**
