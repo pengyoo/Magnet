@@ -1,17 +1,19 @@
 package com.pengyu.magnet.repository;
 
+import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.Job;
-import com.pengyu.magnet.dto.JobResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
-    Page<Job> findAllByCompanyId(Pageable pageable, Long companyId);
+
+    @Query("select j from Job j JOIN FETCH j.company where j.company =:company and (j.status=0 or j.status=1)")
+    Page<Job> findAllByCompany(Pageable pageable, @Param("company") Company company);
 
     long countByCompanyId(Long companyId);
 

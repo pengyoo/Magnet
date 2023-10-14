@@ -46,7 +46,7 @@ public class JobApplication {
 
     // Application Status Enum
     public enum Status {
-        PENDING_REVIEW,
+        PENDING,
         ACCEPTED,
         REJECTED
     }

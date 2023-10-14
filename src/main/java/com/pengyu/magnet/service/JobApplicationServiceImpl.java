@@ -84,7 +84,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 .job(job)
                 .appliedDate(LocalDateTime.now())
                 .user(user)
-                .status(JobApplication.Status.PENDING_REVIEW)
+                .status(JobApplication.Status.PENDING)
                 .build();
 
         // Save

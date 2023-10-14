@@ -14,6 +14,7 @@ import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -83,8 +84,7 @@ public class JobServiceImpl implements JobService {
     public JobResponse find(Long id) {
         Job job = jobRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job doesn't exit with id "+id));
         // map job to dto
-        JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
-        jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+        JobResponse jobResponse = mapToJobResponse(job);
         return jobResponse;
     }
 
@@ -98,8 +98,7 @@ public class JobServiceImpl implements JobService {
         Page<Job> jobs = jobRepository.findAll(pageable);
         return jobs.map(job -> {
             // map job to dto
-            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
-            jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+            JobResponse jobResponse = mapToJobResponse(job);
             return jobResponse;
         }).toList();
     }
@@ -112,6 +111,9 @@ public class JobServiceImpl implements JobService {
      */
     @Override
     public List<JobResponse> findAll(Pageable pageable, Long companyId) {
+
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResourceNotFoundException("No such company found with id " + companyId));
+
         Page<Job> jobs;
 
         if(companyId == null)
@@ -119,12 +121,11 @@ public class JobServiceImpl implements JobService {
 
         // If comapnyId is not null, find jobs of this company
         else
-            jobs =  jobRepository.findAllByCompanyId(pageable, companyId);
+            jobs =  jobRepository.findAllByCompany(pageable, company);
 
         return jobs.map(job -> {
             // map job to dto
-            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
-            jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+            JobResponse jobResponse = mapToJobResponse(job);
             return jobResponse;
         }).toList();
     }
@@ -147,11 +148,17 @@ public class JobServiceImpl implements JobService {
             jobs = jobRepository.findAllByTitleLike(pageable, title_like);
 
         return jobs.map(job -> {
-            // map job to dto
-            JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
-            jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+            JobResponse jobResponse = mapToJobResponse(job);
             return jobResponse;
         }).toList();
+    }
+
+    @NotNull
+    private static JobResponse mapToJobResponse(Job job) {
+        // map job to dto
+        JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
+        jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+        return jobResponse;
     }
 
     @Override
@@ -174,4 +181,53 @@ public class JobServiceImpl implements JobService {
         title = "%"+title+"%";
         return jobRepository.countByTitleLike(title);
     }
+
+    /**
+     * Count jobs of current company
+     * @return
+     */
+    @Override
+    public long countByCurrentCompany() {
+        Company company = findCurrentCompany();
+
+        return jobRepository.countByCompanyId(company.getId());
+    }
+
+    private Company findCurrentCompany() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        Company company = companyRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("You doesn't create company information."));
+        return company;
+    }
+
+
+    /**
+     * Find All Jobs of current company
+     * @param pageable
+     * @return
+     */
+    @Override
+    public List<JobResponse> findAllByCurrentCompany(Pageable pageable) {
+        Company company = findCurrentCompany();
+        return jobRepository
+                .findAllByCompany(pageable, company)
+                .map(job ->
+                    mapToJobResponse(job)
+                ).toList();
+    }
+
+    @Override
+    public void delete(Long id) {
+        Job job = jobRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No such job found with id "+id));
+        job.setStatus(Job.Status.DELETED);
+        jobRepository.save(job);
+    }
+
+
 }

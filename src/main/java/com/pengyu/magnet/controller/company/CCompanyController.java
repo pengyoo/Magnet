@@ -26,12 +26,6 @@ public class CCompanyController {
     }
 
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
-    @PatchMapping("/{id}")
-    public CompanyResponse patch(@RequestBody CompanyRequest companyRequest){
-        return companyService.save(companyRequest);
-    }
-
-    @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     @GetMapping
     public CompanyResponse find(){
         return companyService.findCurrentCompany();

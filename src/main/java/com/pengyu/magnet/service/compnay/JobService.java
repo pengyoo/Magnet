@@ -18,4 +18,10 @@ public interface JobService {
     long count(Long companyId);
     long count();
     long count(String title);
+
+    long countByCurrentCompany();
+
+    List<JobResponse> findAllByCurrentCompany(Pageable pageable);
+
+    void delete(Long id);
 }
