@@ -7,8 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.Job;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -26,10 +29,7 @@ public class JobResponse {
     private String description;
     private String salaryRange;
     private String location;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime expireAt;
-
+    private LocalDate expireAt;
     private Job.Status status;
 }

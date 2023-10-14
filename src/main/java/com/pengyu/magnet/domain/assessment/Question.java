@@ -30,7 +30,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<OptionAnswer> optionList;
-
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @Column(columnDefinition = "text")

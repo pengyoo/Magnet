@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,7 +61,8 @@ public class JobServiceImpl implements JobService {
         job.setCreatedAt(LocalDateTime.now());
 
         // Set default status: Active
-        job.setStatus(Job.Status.ACTIVE);
+        if(job.getStatus() == null)
+            job.setStatus(Job.Status.ACTIVE);
 
         // save
         job = jobRepository.save(job);

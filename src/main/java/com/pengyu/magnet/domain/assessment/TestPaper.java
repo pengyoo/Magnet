@@ -18,6 +18,7 @@ public class TestPaper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -42,6 +43,7 @@ public class TestPaper {
     @OneToMany(mappedBy = "testPaper", cascade = CascadeType.ALL)
     private List<Question> questionList;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public enum Type {

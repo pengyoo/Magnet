@@ -3,6 +3,7 @@ package com.pengyu.magnet.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Data
 // Add Index for title
 @Table(name = "job", indexes = @Index(columnList="title"))
+@DynamicUpdate
 public class Job {
 
     @Id
@@ -36,13 +38,14 @@ public class Job {
     private String salaryRange;
     private String location;
     private LocalDateTime createdAt;
-    private LocalDateTime expireAt;
+    private LocalDate expireAt;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public enum Status {
         ACTIVE,
-        EXPIRED,
+        PAUSED,
         DELETED
     }
 }

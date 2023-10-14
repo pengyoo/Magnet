@@ -42,6 +42,7 @@ public class JobApplication {
     private Job job;
 
     private LocalDateTime appliedDate;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     // Application Status Enum
