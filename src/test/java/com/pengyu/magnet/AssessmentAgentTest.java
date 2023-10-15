@@ -1,7 +1,6 @@
 package com.pengyu.magnet;
 
-import com.pengyu.magnet.langchan4j.AssessmentAgent;
-import dev.langchain4j.data.message.AiMessage;
+import com.pengyu.magnet.langchain4j.AssessmentAgent;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SpringBootTest

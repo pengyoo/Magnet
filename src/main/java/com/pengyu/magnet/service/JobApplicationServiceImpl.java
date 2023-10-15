@@ -1,9 +1,6 @@
 package com.pengyu.magnet.service;
 
-import com.pengyu.magnet.domain.Job;
-import com.pengyu.magnet.domain.JobApplication;
-import com.pengyu.magnet.domain.Resume;
-import com.pengyu.magnet.domain.User;
+import com.pengyu.magnet.domain.*;
 import com.pengyu.magnet.dto.CompanyResponse;
 import com.pengyu.magnet.dto.JobApplicationResponse;
 import com.pengyu.magnet.dto.JobResponse;
@@ -14,11 +11,9 @@ import com.pengyu.magnet.mapper.CompanyMapper;
 import com.pengyu.magnet.mapper.JobApplicationMapper;
 import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.UserMapper;
-import com.pengyu.magnet.repository.JobApplicationRepository;
-import com.pengyu.magnet.repository.JobRepository;
-import com.pengyu.magnet.repository.ResumeRepository;
-import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.*;
 import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.resume.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +40,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final ResumeRepository resumeRepository;
 
     private final AsyncTaskService asynTaskService;
+    private final CompanyRepository companyRepository;
+
+    private final ResumeService resumeService;
 
     /**
      * Apply a job
@@ -53,10 +51,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      */
     @Override
     public JobApplicationResponse apply(Long jobId) {
-        // Get Current login user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
+        User user = getCurrentUser();
 
         // Check if the user applied this job
         JobApplication ja = jobApplicationRepository.findByUserIdAndJobId(user.getId(), jobId);
@@ -95,6 +90,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         return mapJobApplicationToJobApplicationResponse(jobApplication);
     }
+
 
     /**
      * Find Job Application by id
@@ -135,9 +131,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public List<JobApplicationResponse> findAllByCurrentUser(Pageable pageable) {
         // Get Current login user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
+        User user = getCurrentUser();
 
         return findAll(pageable, user.getId());
     }
@@ -168,17 +162,54 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         jobApplicationRepository.save(jobApplication);
     }
 
+
+    /**
+     * Get Job count
+     * @return
+     */
     @Override
     public long count() {
         return jobApplicationRepository.count();
     }
+
+    @Override
+    public Page<JobApplicationResponse> findAllByCurrentCompany(Pageable pageable) {
+        Company company = getCurrentCompany();
+        return jobApplicationRepository.findAllByCompany(pageable, company)
+                .map(jobApplication -> mapJobApplicationToJobApplicationResponse(jobApplication));
+    }
+
     @Override
     public long countByCurrentUser() {
+        // Get Current login user
+        User user = getCurrentUser();
+        return jobApplicationRepository.countByUserId(user.getId());
+    }
+
+
+    /**
+     * Get Login User
+     * @return
+     */
+
+    private User getCurrentUser() {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
-        return jobApplicationRepository.countByUserId(user.getId());
+        return user;
+    }
+
+    /**
+     * Get login Company
+     * @return
+     */
+    private Company getCurrentCompany() {
+        User user = getCurrentUser();
+        Company company = companyRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("No such company found with user id " + user.getId()));
+        return company;
     }
 
     /**
@@ -187,13 +218,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @return
      */
     private JobApplicationResponse mapJobApplicationToJobApplicationResponse(JobApplication jobApplication){
+
+        // Set Job
         CompanyResponse companyResponse = CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(jobApplication.getJob().getCompany());
         JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(jobApplication.getJob());
         jobResponse.setCompanyData(companyResponse);
-        UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(jobApplication.getUser());
         JobApplicationResponse jobApplicationResponse = JobApplicationMapper.INSTANCE.mapJobApplicationToJobApplicationResponse(jobApplication);
         jobApplicationResponse.setJobData(jobResponse);
+
+        // Set User
+        UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(jobApplication.getUser());
         jobApplicationResponse.setUserData(userResponse);
+
+        // Set Resume
+        jobApplicationResponse.setResume(resumeService.findResumeByUserId(jobApplication.getUser().getId()));
+
         return jobApplicationResponse;
     }
 }

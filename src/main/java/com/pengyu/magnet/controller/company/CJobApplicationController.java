@@ -7,12 +7,16 @@ import com.pengyu.magnet.service.JobApplicationService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.pengyu.magnet.utils.PageUtil.getPageable;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,33 +32,26 @@ public class CJobApplicationController {
      * @param order
      * @return list of JobResponse
      */
-    // TODO find all by company
     @GetMapping()
-    @RolesAllowed(value = {CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY})
     public List<JobApplicationResponse> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
                                                 @RequestParam(defaultValue = "10", required = false) Integer _end,
                                                 @RequestParam(defaultValue = "id", required = false) String sort,
                                                 @RequestParam(defaultValue = "desc", required = false) String order,
                                                 HttpServletResponse response
                                      ){
-        // process sort factor
-        Sort sortBy = "desc".equals(order) ? Sort.by(sort).descending() : Sort.by(sort).ascending();
 
-        // create pageable
-        int pageSize = _end - _start;
-        int page = _start / (pageSize - 1);
-        Pageable pageable = PageRequest.of(page, pageSize, sortBy);
 
+        Page<JobApplicationResponse> allByCurrentCompany = jobApplicationService.findAllByCurrentCompany(getPageable(_start, _end, sort, order));
         // Set Header
-        String count = String.valueOf(jobApplicationService.count());
-        response.addHeader("x-total-count", count);
+        response.addHeader("x-total-count", String.valueOf(allByCurrentCompany.getTotalElements()));
         response.addHeader("Access-Control-Expose-Headers", "x-total-count");
 
-        return jobApplicationService.findAll(pageable, null);
+        return allByCurrentCompany.getContent();
     }
 
     @PostMapping("/{id}")
-    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY})
     public void modifyState(@RequestParam JobApplication.Status status, @PathVariable Long id){
         jobApplicationService.modifyState(id, status);
     }

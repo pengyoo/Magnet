@@ -21,7 +21,7 @@ public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
     /**
-     * Find job by id
+     * Find jobApplication by id
      * @param id
      * @return
      */

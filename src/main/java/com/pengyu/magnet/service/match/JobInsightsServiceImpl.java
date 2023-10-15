@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class JobRequirementsServiceImpl implements JobRequirementsService {
+public class JobInsightsServiceImpl implements JobInsightsService {
 
     private final JobRequirementsRepository jobRequirementsRepository;
 

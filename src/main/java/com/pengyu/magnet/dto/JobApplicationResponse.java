@@ -23,6 +23,8 @@ public class JobApplicationResponse {
     @JsonProperty(value = "job")
     private JobResponse jobData;
 
+    private ResumeDTO resume;
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime appliedDate;
     private JobApplication.Status status;

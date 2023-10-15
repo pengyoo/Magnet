@@ -13,7 +13,7 @@ import com.pengyu.magnet.dto.MatchingIndexDTO;
 import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
-import com.pengyu.magnet.langchan4j.MatchAgent;
+import com.pengyu.magnet.langchain4j.MatchAgent;
 import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.MatchingIndexMapper;
 import com.pengyu.magnet.repository.JobRepository;
@@ -40,7 +40,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     private final ResumeRepository resumeRepository;
 
     private final MatchingIndexRepository matchingIndexRepository;
-    private final JobRequirementsService jobRequirementsService;
+    private final JobInsightsService jobRequirementsService;
     private final ResumeInsightsService resumeInsightsService;
     private final UserRepository userRepository;
 

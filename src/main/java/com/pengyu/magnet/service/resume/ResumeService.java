@@ -13,4 +13,6 @@ public interface ResumeService {
     long count();
 
     ResumeDTO findMyResume();
+
+    ResumeDTO findResumeByUserId(Long id);
 }

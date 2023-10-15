@@ -113,23 +113,24 @@ public class JobServiceImpl implements JobService {
      */
     @Override
     public List<JobResponse> findAll(Pageable pageable, Long companyId) {
-
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResourceNotFoundException("No such company found with id " + companyId));
-
         Page<Job> jobs;
 
-        if(companyId == null)
-            return findAll(pageable);
+        if(companyId != null) {
+
+            Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResourceNotFoundException("No such company found with id " + companyId));
+            jobs = jobRepository.findAllByCompany(pageable, company);
+            return jobs.map(job -> {
+                // map job to dto
+                JobResponse jobResponse = mapToJobResponse(job);
+                return jobResponse;
+            }).toList();
+        }
 
         // If comapnyId is not null, find jobs of this company
         else
-            jobs =  jobRepository.findAllByCompany(pageable, company);
+            return findAll(pageable);
 
-        return jobs.map(job -> {
-            // map job to dto
-            JobResponse jobResponse = mapToJobResponse(job);
-            return jobResponse;
-        }).toList();
+
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.pengyu.magnet.langchan4j;
+package com.pengyu.magnet.langchain4j;
 
 
 import dev.langchain4j.service.SystemMessage;

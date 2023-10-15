@@ -99,6 +99,16 @@ public class ResumeServiceImpl implements ResumeService {
         return mapResumeToResumeDTO(resume);
     }
 
+
+
+    @Override
+    public ResumeDTO findResumeByUserId(Long userId) {
+        Resume resume = resumeRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Current user doesn't create a resume"));
+        return mapResumeToResumeDTO(resume);
+    }
+
     /**
      * Map resume to dto
      * @param resume
