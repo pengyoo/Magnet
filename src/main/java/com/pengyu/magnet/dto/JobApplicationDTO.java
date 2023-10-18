@@ -2,9 +2,7 @@ package com.pengyu.magnet.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.JobApplication;
-import com.pengyu.magnet.domain.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,7 +11,7 @@ import java.time.LocalDateTime;
  * JobApplication Entity (It's like a relationship table)
  */
 @Data
-public class JobApplicationResponse {
+public class JobApplicationDTO {
 
     private Long id;
 
@@ -24,6 +22,8 @@ public class JobApplicationResponse {
     private JobResponse jobData;
 
     private ResumeDTO resume;
+
+    private MatchingIndexDTO matchingIndex;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime appliedDate;

@@ -1,10 +1,13 @@
 package com.pengyu.magnet.service.match;
 
+import com.pengyu.magnet.domain.JobApplication;
+import com.pengyu.magnet.domain.Resume;
 import com.pengyu.magnet.domain.match.MatchingIndex;
 import com.pengyu.magnet.dto.MatchingIndexDTO;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.MatchingIndexMapper;
+import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.match.MatchingIndexRepository;
 import com.pengyu.magnet.service.compnay.JobServiceImpl;
 import com.pengyu.magnet.service.resume.ResumeServiceImpl;
@@ -22,6 +25,7 @@ import java.util.List;
 public class MatchingIndexServiceImpl implements MatchingIndexService{
 
     private final MatchingIndexRepository matchingIndexRepository;
+    private final ResumeRepository resumeRepository;
 
     /**
      * Find All MatchingIndex
@@ -58,5 +62,16 @@ public class MatchingIndexServiceImpl implements MatchingIndexService{
     @Override
     public long count() {
         return matchingIndexRepository.count();
+    }
+
+    @Override
+    public MatchingIndexDTO findByMatchingIndexByJobApplication(JobApplication jobApplication) {
+        Resume resume = resumeRepository
+                .findByUserId(jobApplication.getUser().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("No such resume found with user id " + jobApplication.getUser().getId()));
+        MatchingIndex matchingIndex = matchingIndexRepository
+                .findByJobIdAndResumeId(jobApplication.getJob().getId(), resume.getId())
+                .orElse(null);
+        return MatchingIndexMapper.INSTANCE.mapMatchingIndexToMatchingIndexDTO(matchingIndex);
     }
 }

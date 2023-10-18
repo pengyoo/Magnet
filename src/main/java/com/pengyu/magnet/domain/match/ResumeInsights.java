@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pengyu.magnet.domain.Resume;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "match_resume_insights")
+@DynamicUpdate
 public class ResumeInsights {
 
     @Id
@@ -35,4 +37,16 @@ public class ResumeInsights {
 
     @OneToMany(mappedBy = "resumeInsights", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skill> skills;
+
+    @Override
+    public String toString() {
+        return "ResumeInsights{" +
+                "id=" + id +
+                ", degree='" + degree + '\'' +
+                ", major='" + major + '\'' +
+                ", experience='" + experience + '\'' +
+                ", language='" + language + '\'' +
+                ", skills=" + skills +
+                '}';
+    }
 }

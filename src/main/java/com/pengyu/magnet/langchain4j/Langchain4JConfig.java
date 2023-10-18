@@ -12,7 +12,7 @@ public class Langchain4JConfig {
     AssessmentAgent assessmentAgent(ChatLanguageModel chatLanguageModel) {
         return AiServices.builder(AssessmentAgent.class)
                 .chatLanguageModel(chatLanguageModel)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
+//                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
                 .build();
     }
 
@@ -20,7 +20,7 @@ public class Langchain4JConfig {
     MatchAgent matchAgent(ChatLanguageModel chatLanguageModel) {
         return AiServices.builder(MatchAgent.class)
                 .chatLanguageModel(chatLanguageModel)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
+//                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
                 .build();
     }
 

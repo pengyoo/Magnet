@@ -1,5 +1,6 @@
 package com.pengyu.magnet.service.match;
 
+import com.pengyu.magnet.domain.JobApplication;
 import com.pengyu.magnet.dto.MatchingIndexDTO;
 import org.springframework.data.domain.Pageable;
 
@@ -10,4 +11,6 @@ public interface MatchingIndexService {
 
     MatchingIndexDTO find(Long id);
     public long count();
+
+    MatchingIndexDTO findByMatchingIndexByJobApplication(JobApplication jobApplication);
 }

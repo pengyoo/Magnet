@@ -84,7 +84,7 @@ langchain4j:
 #      max-tokens: 100
 #      presence-penalty: 0.0
 #      frequency-penalty: 0.0
-      timeout: PT60S
+      timeout: PT300S
 #      max-retries: 3
 #      log-requests: true
 #      log-responses: true

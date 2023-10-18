@@ -1,11 +1,7 @@
 package com.pengyu.magnet.mapper;
 
-import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.JobApplication;
-import com.pengyu.magnet.dto.CompanyRequest;
-import com.pengyu.magnet.dto.CompanyResponse;
-import com.pengyu.magnet.dto.JobApplicationResponse;
-import com.pengyu.magnet.repository.JobApplicationRepository;
+import com.pengyu.magnet.dto.JobApplicationDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -13,5 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface JobApplicationMapper {
     JobApplicationMapper INSTANCE = Mappers.getMapper(JobApplicationMapper.class);
 
-    JobApplicationResponse mapJobApplicationToJobApplicationResponse(JobApplication jobApplication);
+    JobApplicationDTO mapJobApplicationToJobApplicationResponse(JobApplication jobApplication);
 }

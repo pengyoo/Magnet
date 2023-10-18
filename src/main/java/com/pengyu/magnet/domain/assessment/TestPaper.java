@@ -5,6 +5,7 @@ import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "assessment_paper")
+@DynamicUpdate
 public class TestPaper {
 
     @Id
@@ -54,5 +56,18 @@ public class TestPaper {
     public enum Status {
         ACTIVE,
         INACTIVE
+    }
+
+    @Override
+    public String toString() {
+        return "TestPaper{" +
+                "id=" + id +
+                ", type=" + type +
+                ", createdAt=" + createdAt +
+                ", job=" + job +
+                ", user=" + user +
+                ", questionList=" + questionList +
+                ", status=" + status +
+                '}';
     }
 }

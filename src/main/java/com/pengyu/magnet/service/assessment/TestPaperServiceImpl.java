@@ -1,17 +1,22 @@
 package com.pengyu.magnet.service.assessment;
 
+import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.domain.assessment.Question;
 import com.pengyu.magnet.domain.assessment.TestPaper;
+import com.pengyu.magnet.dto.JobResponse;
 import com.pengyu.magnet.dto.TestPaperDTO;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.TestPaperMapper;
+import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import com.pengyu.magnet.service.assessment.TestPaperService;
+import com.pengyu.magnet.service.compnay.JobService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +35,9 @@ public class TestPaperServiceImpl implements TestPaperService {
     private final TestPaperRepository testPaperRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
+    private final CompanyRepository companyRepository;
+
+    private final JobService jobService;
 
     /**
      * Create
@@ -38,6 +46,11 @@ public class TestPaperServiceImpl implements TestPaperService {
      */
     @Override
     public TestPaperDTO save(TestPaperDTO testPaperDTO) {
+        // If edit
+        if(testPaperDTO.getJob() != null) {
+            testPaperDTO.setJobId(testPaperDTO.getJob().getId());
+        }
+
         // Map testPaperDTO tp testPaper
         TestPaper testPaper = TestPaperMapper.INSTANCE.mapTestPaperDTOToTestPaper(testPaperDTO);
 
@@ -90,9 +103,7 @@ public class TestPaperServiceImpl implements TestPaperService {
         // If userId is not null, fetch by currentUser
         if(userId != null) {
             // Get Current login user
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String email = authentication.getName();
-            User user = userRepository.findByEmail(email);
+            User user = getCurrentUser();
 
             return testPaperRepository
                     .findAllByUser(pageable, user)
@@ -106,11 +117,40 @@ public class TestPaperServiceImpl implements TestPaperService {
                 .toList();
     }
 
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        return user;
+    }
+
+    private Company getCurrentCompany() {
+        User currentUser = getCurrentUser();
+        return companyRepository
+                .findByUserId(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("No such company found with user id "+ currentUser.getId()));
+
+    }
+
     @Override
     public long count(Long userId) {
         if(userId != null){
             return testPaperRepository.countByUserId(userId);
         }
         return testPaperRepository.count();
+    }
+
+    @Override
+    public Page<TestPaperDTO> findAllByCurrentCompany(Pageable pageable) {
+        return testPaperRepository
+                .findAllByUser(pageable, getCurrentUser())
+                .map(testPaper -> matTestPaperToTestPaperDTO(testPaper));
+    }
+
+    private TestPaperDTO matTestPaperToTestPaperDTO(TestPaper testPaper) {
+        TestPaperDTO testPaperDTO = TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaper);
+        JobResponse jobResponse = jobService.find(testPaper.getJob().getId());
+        testPaperDTO.setJob(jobResponse);
+        return testPaperDTO;
     }
 }

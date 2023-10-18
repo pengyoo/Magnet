@@ -5,6 +5,7 @@ import com.pengyu.magnet.domain.assessment.TestPaper;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class TestPaperDTO {
@@ -14,5 +15,7 @@ public class TestPaperDTO {
     private TestPaper.Type type;
     private Long jobId;
     private List<Question> questionList;
+
+    private JobResponse job;
 
 }

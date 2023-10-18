@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pengyu.magnet.domain.Job;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "match_job_insights")
+@DynamicUpdate
 public class JobInsights {
 
     @Id

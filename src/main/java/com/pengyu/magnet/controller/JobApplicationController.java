@@ -2,7 +2,7 @@ package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.domain.JobApplication;
-import com.pengyu.magnet.dto.JobApplicationResponse;
+import com.pengyu.magnet.dto.JobApplicationDTO;
 import com.pengyu.magnet.service.JobApplicationService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +26,7 @@ public class JobApplicationController {
      * @return
      */
     @GetMapping("/{id}")
-    public JobApplicationResponse find(@PathVariable Long id){
+    public JobApplicationDTO find(@PathVariable Long id){
         return jobApplicationService.find(id);
     }
 
@@ -40,11 +40,11 @@ public class JobApplicationController {
      */
     @GetMapping()
     @RolesAllowed(value = {CONSTANTS.ROLE_ADMIN})
-    public List<JobApplicationResponse> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
-                                                @RequestParam(defaultValue = "10", required = false) Integer _end,
-                                                @RequestParam(defaultValue = "id", required = false) String sort,
-                                                @RequestParam(defaultValue = "desc", required = false) String order,
-                                                HttpServletResponse response
+    public List<JobApplicationDTO> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,
+                                           @RequestParam(defaultValue = "10", required = false) Integer _end,
+                                           @RequestParam(defaultValue = "id", required = false) String sort,
+                                           @RequestParam(defaultValue = "desc", required = false) String order,
+                                           HttpServletResponse response
                                      ){
         // process sort factor
         Sort sortBy = "desc".equals(order) ? Sort.by(sort).descending() : Sort.by(sort).ascending();

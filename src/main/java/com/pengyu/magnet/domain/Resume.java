@@ -4,6 +4,7 @@ package com.pengyu.magnet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "resume")
+@DynamicUpdate
 public class Resume {
 
     @Id

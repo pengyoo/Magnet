@@ -2,6 +2,7 @@ package com.pengyu.magnet.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * Company Entity
@@ -9,6 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="company")
+@DynamicUpdate
 public class Company {
 
     @Id

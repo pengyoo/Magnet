@@ -19,7 +19,9 @@ import com.pengyu.magnet.mapper.MatchingIndexMapper;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.match.JobRequirementsRepository;
 import com.pengyu.magnet.repository.match.MatchingIndexRepository;
+import com.pengyu.magnet.repository.match.ResumeInsightsRepository;
 import com.pengyu.magnet.service.resume.ResumeServiceImpl;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
@@ -43,7 +45,8 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     private final JobInsightsService jobRequirementsService;
     private final ResumeInsightsService resumeInsightsService;
     private final UserRepository userRepository;
-
+    private final JobRequirementsRepository jobRequirementsRepository;
+    private final ResumeInsightsRepository resumeInsightsRepository;
 
 
     // Prompt Template
@@ -103,7 +106,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             "Please extract the insights of the resume based on the Resume. The items includes: degree, major, skills, experience, language. ",
             "degree: Bachelor's degree, Master's degree, Doctor's, Diploma or other",
             "major: for example, Computer Science",
-            "skills: professional skills such as programming language, libraries, concepts, software, methodologies the job seeker has. Every skill should be an independent technology. If the skill is present in education, work experience and project experience, the weight of the skill will be increased. One point is added for each occurrence.",
+            "skills: professional skills such as programming language, libraries, concepts, software, methodologies the job seeker has. Every skill should be an independent technology. If the skill is present in education, work experience and project experience of the resume, the weight of the skill will be increased. The maximum value of weight is 10",
             "experience: how long does the job seeker have in related work experience, for example 4+ years.",
             "language: for example, Fluent in English",
             "If there is no specified information for any item just leave it empty",
@@ -115,8 +118,8 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
                       "major":"...",
                       skills:
                       [
-                      {"skill":"Java", weight:"5"},
-                      {"skill","Scrum", weight:"1"},
+                      {"skill":"Java", weight:"..."},
+                      {"skill","Scrum", weight:"..."},
                       {"skill","...", weight:"..."}
                       ],
                       "experience":"...",
@@ -185,7 +188,7 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             // Check if jobRequirements already exist
             JobInsights jobRequirements = jobRequirementsService.findByJobId(jobId);
             if(jobRequirements != null) {
-                jobRequirementsNew.setId(jobRequirements.getId());
+                jobRequirementsRepository.delete(jobRequirements);
             }
 
             // Save to Data
@@ -230,11 +233,11 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             // Check if ResumeInsights already exist
             ResumeInsights resumeInsights = resumeInsightsService.findByResumeId(resumeId);
             if(resumeInsights != null) {
-                resumeInsightsNew.setId(resumeInsights.getId());
+                resumeInsightsRepository.delete(resumeInsights);
             }
 
             // Save to database
-            ResumeInsights saved = resumeInsightsService.save(resumeInsights, resumeId);
+            ResumeInsights saved = resumeInsightsService.save(resumeInsightsNew, resumeId);
 
             return saved;
 

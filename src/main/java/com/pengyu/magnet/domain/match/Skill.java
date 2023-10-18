@@ -3,10 +3,12 @@ package com.pengyu.magnet.domain.match;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Data
 @Entity
 @Table(name = "match_skill")
+@DynamicUpdate
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +34,13 @@ public class Skill {
     )
     @JsonIgnore
     private ResumeInsights resumeInsights;
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", skill='" + skill + '\'' +
+                ", weight=" + weight +
+                '}';
+    }
 }

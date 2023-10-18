@@ -2,7 +2,6 @@ package com.pengyu.magnet.repository;
 
 import com.pengyu.magnet.domain.Company;
 import com.pengyu.magnet.domain.JobApplication;
-import com.pengyu.magnet.dto.JobApplicationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

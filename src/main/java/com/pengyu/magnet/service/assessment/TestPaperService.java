@@ -1,6 +1,7 @@
 package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.dto.TestPaperDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface TestPaperService {
     List<TestPaperDTO> findAll(Pageable pageable, Long userId);
 
     long count(Long userId);
+
+    Page<TestPaperDTO> findAllByCurrentCompany(Pageable pageable);
 }

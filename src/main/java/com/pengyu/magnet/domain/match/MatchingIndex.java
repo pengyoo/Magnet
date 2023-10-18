@@ -6,6 +6,7 @@ import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.Resume;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * Matching Index between Job and Resume
@@ -13,6 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "match_matching_index")
+@DynamicUpdate
 public class MatchingIndex {
 
     @Id

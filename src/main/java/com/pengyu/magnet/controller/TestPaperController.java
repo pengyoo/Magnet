@@ -70,9 +70,9 @@ public class TestPaperController {
      * @param testPaperGenerationRequest
      * @return
      */
-    @GetMapping("/generate")
+    @PostMapping("/generate")
     @RolesAllowed({CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_ADMIN})
-    public TestPaperDTO generate(TestPaperGenerationRequest testPaperGenerationRequest) {
+    public TestPaperDTO generate(@RequestBody TestPaperGenerationRequest testPaperGenerationRequest) {
         return paperGeneratorService.generatePaper(testPaperGenerationRequest);
     }
 }

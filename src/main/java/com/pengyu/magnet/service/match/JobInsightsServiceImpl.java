@@ -44,6 +44,6 @@ public class JobInsightsServiceImpl implements JobInsightsService {
     public JobInsights findByJobId(Long jobId) {
         return jobRequirementsRepository
                 .findByJobId(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("No such JobRequirements found with jobId " +jobId));
+                .orElse(null);
     }
 }

@@ -4,6 +4,7 @@ package com.pengyu.magnet.service.assessment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.User;
+import com.pengyu.magnet.domain.assessment.TestPaper;
 import com.pengyu.magnet.dto.TestPaperDTO;
 import com.pengyu.magnet.dto.TestPaperGenerationRequest;
 import com.pengyu.magnet.exception.ApiException;
@@ -11,6 +12,7 @@ import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.langchain4j.AssessmentAgent;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
 import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
@@ -32,6 +34,7 @@ public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
     private final TestPaperService testPaperService;
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
+    private final TestPaperRepository testPaperRepository;
 
     // Prompt Template
     @StructuredPrompt({
@@ -75,6 +78,12 @@ public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
      * @return
      */
     public TestPaperDTO generatePaper(TestPaperGenerationRequest testPaperGenerationRequest){
+        // Check if test is already exist
+        TestPaper testPaper = testPaperRepository.findByJobId(testPaperGenerationRequest.getJobId());
+        if(testPaper != null) {
+            throw new ApiException("You've already generated questions for this job.");
+        }
+
         // Get Job info
         Job job = jobRepository
                 .findById(testPaperGenerationRequest.getJobId())

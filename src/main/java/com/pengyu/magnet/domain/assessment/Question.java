@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "assessment_question")
+@DynamicUpdate
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +44,17 @@ public class Question {
         FREE_TEXT,
         MULTIPLE_CHOICE
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", question='" + question + '\'' +
+                ", type=" + type +
+                ", standardAnswer='" + standardAnswer + '\'' +
+                '}';
+    }
+
+    @Transient
+    private String key = UUID.randomUUID().toString();
 }

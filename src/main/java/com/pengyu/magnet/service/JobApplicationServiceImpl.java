@@ -1,10 +1,7 @@
 package com.pengyu.magnet.service;
 
 import com.pengyu.magnet.domain.*;
-import com.pengyu.magnet.dto.CompanyResponse;
-import com.pengyu.magnet.dto.JobApplicationResponse;
-import com.pengyu.magnet.dto.JobResponse;
-import com.pengyu.magnet.dto.UserResponse;
+import com.pengyu.magnet.dto.*;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.CompanyMapper;
@@ -13,6 +10,7 @@ import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.*;
 import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.match.MatchingIndexService;
 import com.pengyu.magnet.service.resume.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,13 +42,15 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     private final ResumeService resumeService;
 
+    private final MatchingIndexService matchingIndexService;
+
     /**
      * Apply a job
      * @param jobId
      * @return
      */
     @Override
-    public JobApplicationResponse apply(Long jobId) {
+    public JobApplicationDTO apply(Long jobId) {
         User user = getCurrentUser();
 
         // Check if the user applied this job
@@ -98,7 +98,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @return
      */
     @Override
-    public JobApplicationResponse find(Long id) {
+    public JobApplicationDTO find(Long id) {
         JobApplication jobApplication = jobApplicationRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no Job Application with id " + id));
@@ -112,7 +112,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @return
      */
     @Override
-    public List<JobApplicationResponse> findAll(Pageable pageable, Long userId) {
+    public List<JobApplicationDTO> findAll(Pageable pageable, Long userId) {
 
         if(userId != null) {
             Page<JobApplication> jobApplications = jobApplicationRepository.findByUserId(pageable, userId);
@@ -129,7 +129,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @return
      */
     @Override
-    public List<JobApplicationResponse> findAllByCurrentUser(Pageable pageable) {
+    public List<JobApplicationDTO> findAllByCurrentUser(Pageable pageable) {
         // Get Current login user
         User user = getCurrentUser();
 
@@ -173,7 +173,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public Page<JobApplicationResponse> findAllByCurrentCompany(Pageable pageable) {
+    public Page<JobApplicationDTO> findAllByCurrentCompany(Pageable pageable) {
         Company company = getCurrentCompany();
         return jobApplicationRepository.findAllByCompany(pageable, company)
                 .map(jobApplication -> mapJobApplicationToJobApplicationResponse(jobApplication));
@@ -217,13 +217,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
      * @param jobApplication
      * @return
      */
-    private JobApplicationResponse mapJobApplicationToJobApplicationResponse(JobApplication jobApplication){
+    private JobApplicationDTO mapJobApplicationToJobApplicationResponse(JobApplication jobApplication){
 
         // Set Job
         CompanyResponse companyResponse = CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(jobApplication.getJob().getCompany());
         JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(jobApplication.getJob());
         jobResponse.setCompanyData(companyResponse);
-        JobApplicationResponse jobApplicationResponse = JobApplicationMapper.INSTANCE.mapJobApplicationToJobApplicationResponse(jobApplication);
+        JobApplicationDTO jobApplicationResponse = JobApplicationMapper.INSTANCE.mapJobApplicationToJobApplicationResponse(jobApplication);
         jobApplicationResponse.setJobData(jobResponse);
 
         // Set User
@@ -232,6 +232,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         // Set Resume
         jobApplicationResponse.setResume(resumeService.findResumeByUserId(jobApplication.getUser().getId()));
+
+
+        // Set MatchingIndex
+        MatchingIndexDTO matchingIndexDTO = matchingIndexService.findByMatchingIndexByJobApplication(jobApplication);
+        jobApplicationResponse.setMatchingIndex(matchingIndexDTO);
 
         return jobApplicationResponse;
     }
