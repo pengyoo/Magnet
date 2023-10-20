@@ -1,8 +1,12 @@
 package com.pengyu.magnet.controller;
 
 import com.pengyu.magnet.config.CONSTANTS;
+import com.pengyu.magnet.domain.match.JobInsights;
+import com.pengyu.magnet.domain.match.ResumeInsights;
 import com.pengyu.magnet.dto.MatchingIndexDTO;
+import com.pengyu.magnet.service.match.JobInsightsService;
 import com.pengyu.magnet.service.match.MatchingIndexService;
+import com.pengyu.magnet.service.match.ResumeInsightsService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,10 @@ import java.util.List;
 public class MatchingIndexController {
 
     private final MatchingIndexService matchingIndexService;
+
+    private final JobInsightsService jobRequirementsService;
+    private final ResumeInsightsService resumeInsightsService;
+
     @GetMapping("/{id}")
     public MatchingIndexDTO findById(@PathVariable Long id) {
         return matchingIndexService.find(id);
@@ -45,5 +53,16 @@ public class MatchingIndexController {
         response.addHeader("Access-Control-Expose-Headers", "x-total-count");
 
         return matchingIndexService.findAll(pageable);
+    }
+
+
+    @GetMapping("/resume_insights/{resumeId}")
+    public ResumeInsights getResumeInsights(@PathVariable Long resumeId) {
+        return resumeInsightsService.findByResumeId(resumeId);
+    }
+
+    @GetMapping("/job_insights/{jobId}")
+    public JobInsights getJobInsights(@PathVariable Long jobId) {
+        return jobRequirementsService.findByJobId(jobId);
     }
 }

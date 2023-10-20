@@ -133,17 +133,14 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     }
 
     @StructuredPrompt({
-            "Please calculate the match between the Resume and the job based on the ResumeInsights and the JobInsights, with the result as a decimal indicating the percentage of the Resume that meets the requirements of the job description.",
-            "The calculation contains the following data:",
-            "degree: degree match",
-            "major: major match",
-            "skill: skill match (as a percentage of matching skills)",
-            "experience: Experience Matching Degree",
-            "language: language match",
-            "overall: overall match",
-            "Each data is a decimal, ranging from 0 to 1, with two decimal places. If there is no specified requirement in JobInsights, the value should be 1. \n",
-            "ResumeInsights: {{resumeInsights}}",
-            "JobInsights: {{jobInsights}}",
+            "Please calculate the match index between the ResumeInsights and the JobInsights, with the result as a decimal indicating the match percentage. Every field's value should be 1 if there's no specified requirement in JobInsights or the data in the JobInsights exceeds the requirements of the JobInsights.",
+            "The calculation should consider the following data:",
+            "degree: Degree match index",
+            "major: Major match index",
+            "skill: Skill match index (as a percentage of matching skills based on the weight of each skill).",
+            "experience: Experience match index.",
+            "language: Language match index.",
+            "overall: Overall match index (overall = (degree + major + language)/3 * 0.2 + skill * 0.4 + experience * 0.4 )).",
             "Structure your answer in the following way:",
             """
                {
@@ -154,12 +151,14 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
                  "language": "...",
                  "overall": "..."
                }
-            """
+            """,
+            "ResumeInsights: {{resumeInsights}}",
+            "JobInsights: {{jobInsights}}",
     })
     @AllArgsConstructor
     static class JobResumeMatchingPrompt {
         private String resumeInsights;
-        private String jobRequirements;
+        private String jobInsights;
     }
 
     public JobInsights extractJobInsights(Long jobId) {
@@ -262,11 +261,11 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             ResumeInsights resumeInsights = resumeInsightsService.findByResumeId(resumeId);
 
             // Build prompt template
-            JobResumeMatchingPrompt resumeExtractionPrompt =
-                    new JobResumeMatchingPrompt(objectMapper.writeValueAsString(jobInsights), objectMapper.writeValueAsString(resumeInsights));
+            JobResumeMatchingPrompt jobResumeMatchingPrompt =
+                    new JobResumeMatchingPrompt(objectMapper.writeValueAsString(resumeInsights).replaceAll("&quot;", ""), objectMapper.writeValueAsString(jobInsights).replaceAll("&quot;", ""));
 
             // Render template
-            Prompt prompt = StructuredPromptProcessor.toPrompt(resumeExtractionPrompt);
+            Prompt prompt = StructuredPromptProcessor.toPrompt(jobResumeMatchingPrompt);
 
             // Call AI API to extract Resume Characteristics
             String json = matchAgent.chat(prompt.toUserMessage().text());
