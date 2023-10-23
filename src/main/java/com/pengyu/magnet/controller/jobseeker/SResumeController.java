@@ -4,14 +4,8 @@ import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.service.resume.ResumeService;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +31,7 @@ public class SResumeController {
     @GetMapping
     @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
     public ResumeDTO findMy(){
-        return resumeService.findMyResume();
+        return resumeService.findMyResumeDTO();
     }
 
 
@@ -51,4 +45,30 @@ public class SResumeController {
     public ResumeDTO patch(@RequestBody ResumeDTO resumeRequest){
         return resumeService.save(resumeRequest);
     }
+
+    @DeleteMapping("/skill/{id}")
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
+    public void deleteSkill(@PathVariable Long id) {
+        resumeService.deleteSkill(id);
+    }
+
+    @DeleteMapping("/education/{id}")
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
+    public void deleteEducation(@PathVariable Long id) {
+        resumeService.deleteEducation(id);
+    }
+
+    @DeleteMapping("/experience/{id}")
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
+    public void deleteExperience(@PathVariable Long id) {
+        resumeService.deleteExperience(id);
+    }
+
+    @DeleteMapping("/project/{id}")
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
+    public void deleteProject(@PathVariable Long id) {
+        resumeService.deleteProject(id);
+    }
+
 }
+

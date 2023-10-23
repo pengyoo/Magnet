@@ -12,7 +12,15 @@ public interface ResumeService {
 
     long count();
 
-    ResumeDTO findMyResume();
+    ResumeDTO findMyResumeDTO();
 
     ResumeDTO findResumeByUserId(Long id);
+
+    void deleteSkill(Long id);
+
+    void deleteEducation(Long id);
+
+    void deleteExperience(Long id);
+
+    void deleteProject(Long id);
 }

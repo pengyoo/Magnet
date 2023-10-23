@@ -5,8 +5,7 @@ import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.*;
-import com.pengyu.magnet.repository.ResumeRepository;
-import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.*;
 import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +31,12 @@ public class ResumeServiceImpl implements ResumeService {
 
     private final AsyncTaskService asynTaskService;
 
+    private final ResumeSkillRepository resumeSkillRepository;
+    private final ResumeEducationRepository resumeEducationRepository;
+    private final ResumeExperienceRepository resumeExperienceRepository;
+    private final ResumeProjectRepository resumeProjectRepository;
+
+
     /**
      * Add or Edit Resume
      * @param resumeRequest
@@ -45,10 +50,14 @@ public class ResumeServiceImpl implements ResumeService {
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
 
+
+
         // Mapper ResumeRequest to Resume
         Resume resume = mapResumeDTOToResume(resumeRequest);
         resume.setUser(user);
         resume.setCreatedAt(LocalDateTime.now());
+
+
         // Save
         resume = resumeRepository.save(resume);
 
@@ -88,7 +97,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public ResumeDTO findMyResume() {
+    public ResumeDTO findMyResumeDTO() {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -99,6 +108,18 @@ public class ResumeServiceImpl implements ResumeService {
         return mapResumeToResumeDTO(resume);
     }
 
+    public Resume findMyResume() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        return resumeRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Current user doesn't create a resume"));
+    }
+
+
+
 
 
     @Override
@@ -107,6 +128,67 @@ public class ResumeServiceImpl implements ResumeService {
                 .findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Current user doesn't create a resume"));
         return mapResumeToResumeDTO(resume);
+    }
+
+    /**
+     * Remove Skill
+     * @param id
+     */
+    @Override
+    public void deleteSkill(Long id) {
+        Resume resume = findMyResume();
+        for (Resume.Skill skill : resume.getSkillList()) {
+            if(skill.getId() == id) {
+                resume.getSkillList().remove(skill);
+                resumeSkillRepository.delete(skill);
+            }
+        }
+        resumeRepository.save(resume);
+    }
+
+    /**
+     * Delete Education
+     * @param id
+     */
+    @Override
+    public void deleteEducation(Long id) {
+        Resume resume = findMyResume();
+        for (Resume.Education education : resume.getEducationList()) {
+            if(education.getId() == id) {
+                resume.getEducationList().remove(education);
+                resumeEducationRepository.delete(education);
+            }
+        }
+    }
+
+    /**
+     * Delete Experience
+     * @param id
+     */
+    @Override
+    public void deleteExperience(Long id) {
+        Resume resume = findMyResume();
+        for (Resume.Experience experience : resume.getWorkExperienceList()) {
+            if(experience.getId() == id) {
+                resume.getWorkExperienceList().remove(experience);
+                resumeExperienceRepository.delete(experience);
+            }
+        }
+    }
+
+    /**
+     * Delete project
+     * @param id
+     */
+    @Override
+    public void deleteProject(Long id) {
+        Resume resume = findMyResume();
+        for (Resume.Project project : resume.getProjectList()) {
+            if(project.getId() == id) {
+                resume.getProjectList().remove(project);
+                resumeProjectRepository.delete(project);
+            }
+        }
     }
 
     /**
