@@ -17,6 +17,8 @@ public class TestInvitationDTO {
     private Long id;
     private String applicant;
     private String jobTitle;
+
+    private TestPaper testPaper;
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private TestInvitation.Status status;

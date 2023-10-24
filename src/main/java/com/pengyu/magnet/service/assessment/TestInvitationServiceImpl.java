@@ -74,6 +74,21 @@ public class TestInvitationServiceImpl implements TestInvitationService {
         testInvitationRepository.deleteById(id);
     }
 
+    @Override
+    public Page<TestInvitationDTO> findAllByCurrentUser(Pageable pageable) {
+        User user = findCurrentUser();
+        Page<TestInvitation> page = testInvitationRepository.findAllByUser(user, pageable);
+        return page.map(testInvitation -> mapTestInvitationToTestInvitationResponse(testInvitation));
+    }
+
+    @Override
+    public TestInvitationDTO findById(Long id) {
+        TestInvitation invitation = testInvitationRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No such invitation found with id " + id));
+        return mapTestInvitationToTestInvitationResponse(invitation);
+    }
+
     private Company findCurrentCompany() {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

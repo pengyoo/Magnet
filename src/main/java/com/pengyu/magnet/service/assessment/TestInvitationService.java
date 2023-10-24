@@ -10,4 +10,8 @@ public interface TestInvitationService {
     Page<TestInvitationDTO> findAllByCurrentCompany(Pageable pageable);
 
     void delete(Long id);
+
+    Page<TestInvitationDTO> findAllByCurrentUser(Pageable pageable);
+
+    TestInvitationDTO findById(Long id);
 }
