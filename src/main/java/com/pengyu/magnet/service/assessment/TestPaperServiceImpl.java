@@ -12,6 +12,7 @@ import com.pengyu.magnet.mapper.TestPaperMapper;
 import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.assessment.QuestionRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import com.pengyu.magnet.service.assessment.TestPaperService;
 import com.pengyu.magnet.service.compnay.JobService;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +38,8 @@ public class TestPaperServiceImpl implements TestPaperService {
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
+
+    private final QuestionRepository questionRepository;
 
     private final JobService jobService;
 
@@ -145,6 +149,22 @@ public class TestPaperServiceImpl implements TestPaperService {
         return testPaperRepository
                 .findAllByUser(pageable, getCurrentUser())
                 .map(testPaper -> matTestPaperToTestPaperDTO(testPaper));
+    }
+
+    @Override
+    @Transactional
+    public void deleteQuestion(Long testPaperId, Long questionId) {
+        TestPaper testPaper = testPaperRepository
+                .findById(testPaperId)
+                .orElseThrow(() -> new ResourceNotFoundException("No such Test Paper found with id " + testPaperId));
+
+        for (Question question : testPaper.getQuestionList()) {
+            if(question.getId() == questionId) {
+                testPaper.getQuestionList().remove(question);
+                questionRepository.delete(question);
+            }
+        }
+        testPaperRepository.save(testPaper);
     }
 
     private TestPaperDTO matTestPaperToTestPaperDTO(TestPaper testPaper) {

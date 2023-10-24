@@ -32,6 +32,12 @@ public class CTestController {
         return testPaperService.save(testPaperDTO);
     }
 
+    @DeleteMapping("/question/{testPaperId}/{questionId}")
+    @RolesAllowed({CONSTANTS.ROLE_COMPANY})
+    public void deleteQuestion(@PathVariable Long testPaperId, @PathVariable Long questionId){
+        testPaperService.deleteQuestion(testPaperId, questionId);
+    }
+
 
     @GetMapping
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})

@@ -14,4 +14,6 @@ public interface TestPaperService {
     long count(Long userId);
 
     Page<TestPaperDTO> findAllByCurrentCompany(Pageable pageable);
+
+    void deleteQuestion(Long testPaperId, Long questionId);
 }

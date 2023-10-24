@@ -135,6 +135,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param id
      */
     @Override
+    @Transactional
     public void deleteSkill(Long id) {
         Resume resume = findMyResume();
         for (Resume.Skill skill : resume.getSkillList()) {
@@ -151,6 +152,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param id
      */
     @Override
+    @Transactional
     public void deleteEducation(Long id) {
         Resume resume = findMyResume();
         for (Resume.Education education : resume.getEducationList()) {
@@ -166,6 +168,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param id
      */
     @Override
+    @Transactional
     public void deleteExperience(Long id) {
         Resume resume = findMyResume();
         for (Resume.Experience experience : resume.getWorkExperienceList()) {
@@ -181,6 +184,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @param id
      */
     @Override
+    @Transactional
     public void deleteProject(Long id) {
         Resume resume = findMyResume();
         for (Resume.Project project : resume.getProjectList()) {

@@ -4,6 +4,7 @@ import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.JobRequest;
 import com.pengyu.magnet.dto.JobResponse;
 import com.pengyu.magnet.service.compnay.JobService;
+import com.pengyu.magnet.utils.PageUtil;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +55,8 @@ public class CJobController {
                                      @RequestParam(defaultValue = "desc", required = false) String order,
                                      HttpServletResponse response
     ){
-        // process sort factor
-        Sort sort = "desc".equals(order) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        // create pageable
-        int pageSize = _end - _start;
-        int page = _start / (pageSize - 1);
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        Pageable pageable = PageUtil.getPageable(_start, _end, sortBy, order);
 
         // Set Header
         String count = String.valueOf(jobService.countByCurrentCompany());
