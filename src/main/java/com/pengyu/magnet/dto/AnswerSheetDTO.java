@@ -16,4 +16,6 @@ public class AnswerSheetDTO {
     @JsonProperty("user")
     private UserResponse userResponse;
 
+    private Long invitationId;
+
 }

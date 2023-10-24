@@ -3,6 +3,7 @@ package com.pengyu.magnet.controller;
 import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.AnswerDTO;
 import com.pengyu.magnet.dto.AnswerSheetDTO;
+import com.pengyu.magnet.repository.assessment.TestInvitationRepository;
 import com.pengyu.magnet.service.assessment.AnswerSheetService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,13 +24,15 @@ import java.util.List;
 public class AnswerSheetController {
     private final AnswerSheetService answerSheetService;
 
+
+
     /**
      * Save Answer Sheet
      * @param answerSheetDTO
      * @return
      */
     @PostMapping("/save_sheet")
-    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER, CONSTANTS.ROLE_ADMIN})
+    @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
     public AnswerSheetDTO save(@RequestBody AnswerSheetDTO answerSheetDTO){
         return answerSheetService.save(answerSheetDTO);
     }

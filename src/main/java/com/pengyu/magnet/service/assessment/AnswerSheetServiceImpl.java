@@ -1,19 +1,15 @@
 package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.domain.User;
-import com.pengyu.magnet.domain.assessment.Answer;
-import com.pengyu.magnet.domain.assessment.AnswerSheet;
-import com.pengyu.magnet.domain.assessment.Question;
-import com.pengyu.magnet.domain.assessment.TestPaper;
+import com.pengyu.magnet.domain.assessment.*;
 import com.pengyu.magnet.dto.AnswerDTO;
 import com.pengyu.magnet.dto.AnswerSheetDTO;
+import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
+import com.pengyu.magnet.mapper.AnswerMapper;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.repository.assessment.AnswerRepository;
-import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
-import com.pengyu.magnet.repository.assessment.QuestionRepository;
-import com.pengyu.magnet.repository.assessment.TestPaperRepository;
+import com.pengyu.magnet.repository.assessment.*;
 import com.pengyu.magnet.service.assessment.AnswerSheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,9 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +38,8 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
     private final TestPaperRepository testPaperRepository;
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
+
+    private final TestInvitationRepository testInvitationRepository;
 
     /**
      * Save Answer Sheet from a user
@@ -59,17 +59,34 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                 .findById(answerSheetDTO.getPaperId())
                 .orElseThrow(() -> new ResourceNotFoundException("No such Test Paper with id " + answerSheetDTO.getPaperId()));
 
-        // Build Answer Sheet
+        Optional<AnswerSheet> optional =  answerSheetRepository.findByUserAndTestPaper(user, testPaper);
+        if(optional.isPresent()) {
+            throw new ApiException("You've already finished this test");
+        }
+
+        // Build AnswerSheet
         AnswerSheet answerSheet = AnswerSheet.builder()
                 .user(user)
                 .testPaper(testPaper)
+                .answerList(answerSheetDTO.getAnswers().stream().map(
+                        answerDTO -> AnswerMapper.INSTANCE.mapAnswerDTOToAnswer(answerDTO)).collect(Collectors.toList()))
                 .createdAt(LocalDateTime.now())
                 .build();
 
-
+        // Bind Answer Sheet for Answer
+        for(Answer answer : answerSheet.getAnswerList()) {
+            answer.setAnswerSheet(answerSheet);
+        }
 
         // Save
         answerSheet = answerSheetRepository.save(answerSheet);
+
+        //Set Test Invitation Status
+        TestInvitation testInvitation = testInvitationRepository
+                .findById(answerSheetDTO.getInvitationId())
+                .orElseThrow(() -> new ResourceNotFoundException("No such Test Invitation found with id " + answerSheetDTO.getInvitationId()));
+        testInvitation.setStatus(TestInvitation.Status.FINISHED);
+        testInvitationRepository.save(testInvitation);
 
         // map to dto
         return mapToAnswerSheetDTO(answerSheet);
@@ -122,7 +139,6 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
             for (Answer answer : answerSheet.getAnswerList()) {
                 AnswerDTO answerDTO = AnswerDTO.builder()
                         .answer(answer.getAnswer())
-                        .questionId(answer.getQuestion().getId())
                         .questionText(answer.getQuestionText())
                         .id(answer.getId())
                         .build();
@@ -157,7 +173,6 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                     .answerSheet(answerSheet)
                     .questionText(answerDTO.getQuestionText())
                     .answer(answerDTO.getAnswer())
-                    .question(question)
                     .id(answerDTO.getId())
                     .build();
             answerRepository.save(answer);

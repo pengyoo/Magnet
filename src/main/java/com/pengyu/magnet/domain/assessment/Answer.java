@@ -38,13 +38,4 @@ public class Answer {
     @JsonIgnore
     private AnswerSheet answerSheet;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "question_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "answer_question_id_fk")
-    )
-    @JsonIgnore
-    private Question question;
-
 }
