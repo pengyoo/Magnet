@@ -15,6 +15,7 @@ public interface TestInvitationRepository extends JpaRepository<TestInvitation, 
 
 
 
+    // TODO: improve performance, maintain a relationship between TestInvitation and company(user)
     @Query("SELECT ti FROM TestInvitation ti JOIN FETCH ti.testPaper tp JOIN FETCH tp.job j JOIN FETCH j.company where j.company = :company")
     Page<TestInvitation> findAllByCompany(Pageable pageable, Company company);
 

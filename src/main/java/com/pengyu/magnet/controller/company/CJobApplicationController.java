@@ -46,10 +46,24 @@ public class CJobApplicationController {
         return allByCurrentCompany.getContent();
     }
 
-    @PostMapping("/{id}")
+    /**
+     * Accept Application: Issue an offer
+     * @param id
+     */
+    @PostMapping("/accept/{id}")
     @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY})
-    public void modifyState(@RequestParam JobApplication.Status status, @PathVariable Long id){
-        jobApplicationService.modifyState(id, status);
+    public void accept(@PathVariable Long id){
+        jobApplicationService.modifyState(id, JobApplication.Status.ACCEPTED);
+    }
+
+    /**
+     * Reject Application
+     * @param id
+     */
+    @PostMapping("/reject/{id}")
+    @RolesAllowed(value = {CONSTANTS.ROLE_COMPANY})
+    public void reject(@PathVariable Long id){
+        jobApplicationService.modifyState(id, JobApplication.Status.REJECTED);
     }
 
 }
