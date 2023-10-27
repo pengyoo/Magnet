@@ -1,5 +1,7 @@
 package com.pengyu.magnet.service.assessment;
 
+import com.pengyu.magnet.domain.Company;
+import com.pengyu.magnet.domain.Resume;
 import com.pengyu.magnet.domain.User;
 import com.pengyu.magnet.domain.assessment.*;
 import com.pengyu.magnet.dto.AnswerDTO;
@@ -7,7 +9,10 @@ import com.pengyu.magnet.dto.AnswerSheetDTO;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.AnswerMapper;
+import com.pengyu.magnet.mapper.AnswerSheetMapper;
 import com.pengyu.magnet.mapper.UserMapper;
+import com.pengyu.magnet.repository.CompanyRepository;
+import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.*;
 import com.pengyu.magnet.service.assessment.AnswerSheetService;
@@ -39,7 +44,10 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
 
+    private final CompanyRepository companyRepository;
+
     private final TestInvitationRepository testInvitationRepository;
+    private final ResumeRepository resumeRepository;
 
     /**
      * Save Answer Sheet from a user
@@ -99,7 +107,6 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                 .orElseThrow(() -> new ResourceNotFoundException("No such Answer Sheet found with id " + id));
 
         AnswerSheetDTO answerSheetDTO =  mapToAnswerSheetDTO(answerSheet);
-        answerSheetDTO.setUserResponse(UserMapper.INSTANCE.mapUserToUserResponse(answerSheet.getUser()));
         return answerSheetDTO;
     }
 
@@ -134,24 +141,34 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
      * @return
      */
     private AnswerSheetDTO mapToAnswerSheetDTO(AnswerSheet answerSheet) {
-        List<AnswerDTO> answerDTOS = new ArrayList<>();
-        if(answerSheet.getAnswerList() != null) {
-            for (Answer answer : answerSheet.getAnswerList()) {
-                AnswerDTO answerDTO = AnswerDTO.builder()
-                        .answer(answer.getAnswer())
-                        .questionText(answer.getQuestionText())
-                        .id(answer.getId())
-                        .build();
-                answerDTOS.add(answerDTO);
-            }
-        }
-        AnswerSheetDTO build = AnswerSheetDTO.builder()
-                .answers(answerDTOS)
-                .paperId(answerSheet.getTestPaper().getId())
-                .id(answerSheet.getId())
-                .build();
-
-        return build;
+//        List<AnswerDTO> answerDTOS = new ArrayList<>();
+//        if(answerSheet.getAnswerList() != null) {
+//            for (Answer answer : answerSheet.getAnswerList()) {
+//                AnswerDTO answerDTO = AnswerDTO.builder()
+//                        .answer(answer.getAnswer())
+//                        .questionText(answer.getQuestionText())
+//                        .id(answer.getId())
+//                        .build();
+//                answerDTOS.add(answerDTO);
+//            }
+//        }
+//        AnswerSheetDTO build = AnswerSheetDTO.builder()
+//                .answers(answerDTOS)
+//                .paperId(answerSheet.getTestPaper().getId())
+//                .id(answerSheet.getId())
+//                .build();
+//
+//        return build;
+        AnswerSheetDTO answerSheetDTO = AnswerSheetMapper.INSTANCE.mapAnswerSheetToAnswerSheetDTO(answerSheet);
+        List<AnswerDTO> answerDTOS = answerSheet.getAnswerList().stream().map(answer -> AnswerMapper.INSTANCE.mapAnswerToAnswerDTO(answer)).collect(Collectors.toList());
+        answerSheetDTO.setAnswers(answerDTOS);
+        answerSheetDTO.setPaperId(answerSheet.getTestPaper().getId());
+        Resume resume = resumeRepository
+                .findByUserId(answerSheet.getUser().getId())
+                .orElseThrow(()->new ResourceNotFoundException("No such user found with id "+ answerSheet.getUser().getId()));
+        answerSheetDTO.setApplicant(resume.getFullName());
+        answerSheetDTO.setUserResponse(UserMapper.INSTANCE.mapUserToUserResponse(answerSheet.getUser()));
+        return answerSheetDTO;
     }
 
 
@@ -186,5 +203,30 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
         }
         return answerSheetRepository.count();
     }
+
+    /**
+     * Find All AnswerSheets of current company
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<AnswerSheetDTO> findAllByCurrentCompany(Pageable pageable) {
+        Company company = findCurrentCompany();
+        return answerSheetRepository
+                .findAllByCompany(company, pageable)
+                .map(answerSheet -> mapToAnswerSheetDTO(answerSheet));
+    }
+
+    private Company findCurrentCompany() {
+        // Get Current login user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        Company company = companyRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("You doesn't create company information."));
+        return company;
+    }
+
 }
 

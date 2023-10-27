@@ -13,8 +13,21 @@ services:
       #- ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - mysql
+  magnet:
+    container_name: magnet
+    image: ypydd88/magnet:latest
+    networks:
+      - spring
+      - mysql
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+
 networks:
   mysql:
+    driver: bridge
+  spring:
     driver: bridge
 
 volumes:

@@ -18,4 +18,6 @@ public class AnswerSheetDTO {
 
     private Long invitationId;
 
+    private String applicant;
+
 }

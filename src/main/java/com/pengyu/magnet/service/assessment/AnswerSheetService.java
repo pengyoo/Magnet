@@ -2,6 +2,7 @@ package com.pengyu.magnet.service.assessment;
 
 import com.pengyu.magnet.dto.AnswerDTO;
 import com.pengyu.magnet.dto.AnswerSheetDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface AnswerSheetService {
     void saveAnswers(List<AnswerDTO> answerDTOs, Long answerSheetId);
 
     long count(Long userId);
+
+    Page<AnswerSheetDTO> findAllByCurrentCompany(Pageable pageable);
 }

@@ -47,7 +47,12 @@ public class TestInvitationServiceImpl implements TestInvitationService {
             throw new ResourceNotFoundException("No such Test Paper found with jobId " + jobApplication.getJob().getId());
         }
 
-        TestInvitation testInvitation = TestInvitation.builder()
+        // Check if it's already invited
+        TestInvitation testInvitation  = testInvitationRepository.findByUserAndTestPaper(user, testPaper);
+        if(testInvitation != null) {
+            throw new ResourceNotFoundException("You've already invited this candidate.");
+        }
+        testInvitation = TestInvitation.builder()
                 .status(TestInvitation.Status.PENDING)
                 .createdAt(LocalDateTime.now())
                 .testPaper(testPaper)
