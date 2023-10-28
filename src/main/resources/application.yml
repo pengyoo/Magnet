@@ -12,9 +12,9 @@ spring:
 
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://jvt95h9qndsewskw:sd3b0i2z6ntahlyt@eporqep6b4b8ql12.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/d7yetxn7a9byngse
-    username: jvt95h9qndsewskw
-    password: sd3b0i2z6ntahlyt
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
 #  datasource:
 #    driverClassName: org.postgresql.Driver
