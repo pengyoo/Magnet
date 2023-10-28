@@ -260,6 +260,14 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             // Get Resume Info
             ResumeInsights resumeInsights = resumeInsightsService.findByResumeId(resumeId);
 
+            if(jobInsights == null){
+                throw new ApiException("There is no JobInsights extract for this job");
+            }
+
+            if(resumeInsights == null){
+                throw new ApiException("There is no ResumeInsights extract for this resume");
+            }
+
             // Build prompt template
             JobResumeMatchingPrompt jobResumeMatchingPrompt =
                     new JobResumeMatchingPrompt(objectMapper.writeValueAsString(resumeInsights).replaceAll("&quot;", ""), objectMapper.writeValueAsString(jobInsights).replaceAll("&quot;", ""));
