@@ -16,6 +16,8 @@ services:
   magnet:
     container_name: magnet
     image: ypydd88/magnet:latest
+    env_file:
+      - .env
     networks:
       - spring
       - postgres
