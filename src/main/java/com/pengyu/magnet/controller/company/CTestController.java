@@ -39,7 +39,7 @@ public class CTestController {
     }
 
 
-    @DeleteMapping("/{testPaperId}/")
+    @DeleteMapping("/{testPaperId}")
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     public void deleteTestPaper(@PathVariable Long testPaperId){
         testPaperService.deleteTestPaper(testPaperId);
