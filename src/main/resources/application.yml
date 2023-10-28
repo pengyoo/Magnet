@@ -54,7 +54,7 @@ openapi:
   service:
     title: Magnet doc
     version: 1.0.0
-    url: http://localhost:8080
+    url: https://magnet-203dcc8b7d54.herokuapp.com/
 springdoc:
   api-docs:
     path: /api/v3/api-docs

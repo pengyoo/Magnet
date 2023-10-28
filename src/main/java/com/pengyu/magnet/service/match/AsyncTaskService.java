@@ -14,16 +14,16 @@ public class AsyncTaskService {
 
     @Async
     public void asyncExtractJobRequirements(Long jobId) {
-//         aiMatchService.extractJobInsights(jobId);
+         aiMatchService.extractJobInsights(jobId);
     }
 
     @Async
     public void asyncExtractResumeInsights(Long resumeId) {
-//        aiMatchService.extractResumeInsights(resumeId);
+        aiMatchService.extractResumeInsights(resumeId);
     }
 
     @Async
     public void asyncMatchJobAndResume(Long jobId, Long resumeId) {
-//        aiMatchService.match(jobId, resumeId);
+        aiMatchService.match(jobId, resumeId);
     }
 }
