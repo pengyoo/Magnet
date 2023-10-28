@@ -73,13 +73,13 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     }
 
     @StructuredPrompt({
-            "Please extract the position requirements from the given job description, considering the following categories:",
-            "degree: Specify the acceptable degrees for the position, such as Bachelor's degree, Master's degree, Doctorate, Diploma, or other.",
-            "major: Identify the preferred major, if mentioned (e.g., Computer Science).",
-            "skills: List the software development technology skills required for the job, including programming languages, libraries, concepts, software, and methodologies. Assign a weight to each skill based on its importance in the job description, with weights ranging from 1 to 10.",
-            "experience: Determine the required years of work experience, such as 4+ years.",
-            "language: Specify language requirements, for instance, Fluent.",
-            "If the job description does not specify a requirement for any of these items, please leave that item empty.",
+            "Please extract the requirements of the position based on the job description. The items includes: degree, major, skills, experience, language. ",
+            "degree: Bachelor's degree, Master's degree, Doctor's, Diploma or other",
+            "major: for example, Computer Science",
+            "skills: software development technology skills such as programming language, libraries, concepts, software, methodologies needed for this job from the job description. Every skill should be an independent technology. Assign a value to weight based on their importance in the job description and the weight should range from 1 to 10.",
+            "experience: the requirement of years of work experience, for example 4+ years.",
+            "language: for example, Fluent",
+            "If there is no specified requirement for any item just leave it empty",
             "Job Description: {{jobDescription}}",
             "Structure your answer in the following way:",
             """
@@ -103,13 +103,13 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     }
 
     @StructuredPrompt({
-            "Please extract the resume insights from the provided resume, considering the following categories:",
-            "degree: Specify the highest education level achieved, such as Bachelor's degree, Master's degree, Doctorate, Diploma, or other.",
-            "major: Identify the major or field of study, if mentioned (e.g., Computer Science).",
-            "skills: List the professional skills possessed by the job seeker, including programming languages, libraries, concepts, software, and methodologies. If the skill is present in the education, work experience, and project experience of the resume, increase the weight of the skill. The maximum weight for a skill is 10.",
-            "experience: Determine the total years of relevant work experience the job seeker has, e.g., 4+ years.",
-            "language: Specify the language proficiency level, such as Fluent in English.",
-            "If the resume does not provide information for any of these items, please leave that item empty.",
+            "Please extract the insights of the resume based on the Resume. The items includes: degree, major, skills, experience, language. ",
+            "degree: Bachelor's degree, Master's degree, Doctor's, Diploma or other",
+            "major: for example, Computer Science",
+            "skills: professional skills such as programming language, libraries, concepts, software, methodologies the job seeker has. Every skill should be an independent technology. If the skill is present in education, work experience and project experience of the resume, the weight of the skill will be increased. The maximum value of weight is 10",
+            "experience: how long does the job seeker have in related work experience, for example 4+ years.",
+            "language: for example, Fluent in English",
+            "If there is no specified information for any item just leave it empty",
             "Resume: {{resume}}",
             "Structure your answer in the following way:",
             """
