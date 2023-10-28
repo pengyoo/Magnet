@@ -39,6 +39,13 @@ public class CTestController {
     }
 
 
+    @DeleteMapping("/{testPaperId}/")
+    @RolesAllowed({CONSTANTS.ROLE_COMPANY})
+    public void deleteTestPaper(@PathVariable Long testPaperId){
+        testPaperService.deleteTestPaper(testPaperId);
+    }
+
+
     @GetMapping
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     public List<TestPaperDTO> findAll(@RequestParam(defaultValue = "0", required = false) Integer _start,

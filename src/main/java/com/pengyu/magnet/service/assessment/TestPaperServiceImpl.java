@@ -121,6 +121,10 @@ public class TestPaperServiceImpl implements TestPaperService {
                 .toList();
     }
 
+    /**
+     * Get Current Login user
+     * @return
+     */
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -128,6 +132,10 @@ public class TestPaperServiceImpl implements TestPaperService {
         return user;
     }
 
+    /**
+     * Get Current Login Company
+     * @return
+     */
     private Company getCurrentCompany() {
         User currentUser = getCurrentUser();
         return companyRepository
@@ -136,6 +144,11 @@ public class TestPaperServiceImpl implements TestPaperService {
 
     }
 
+    /**
+     * Count TestPaper by user
+     * @param userId
+     * @return
+     */
     @Override
     public long count(Long userId) {
         if(userId != null){
@@ -144,6 +157,11 @@ public class TestPaperServiceImpl implements TestPaperService {
         return testPaperRepository.count();
     }
 
+    /**
+     * Find All TestPaper by current company
+     * @param pageable
+     * @return
+     */
     @Override
     public Page<TestPaperDTO> findAllByCurrentCompany(Pageable pageable) {
         return testPaperRepository
@@ -151,6 +169,11 @@ public class TestPaperServiceImpl implements TestPaperService {
                 .map(testPaper -> matTestPaperToTestPaperDTO(testPaper));
     }
 
+    /**
+     * Delete a question from TestPaper
+     * @param testPaperId
+     * @param questionId
+     */
     @Override
     @Transactional
     public void deleteQuestion(Long testPaperId, Long questionId) {
@@ -167,6 +190,20 @@ public class TestPaperServiceImpl implements TestPaperService {
         testPaperRepository.save(testPaper);
     }
 
+    /**
+     * Delete TestPaper by ID
+     * @param testPaperId
+     */
+    @Override
+    public void deleteTestPaper(Long testPaperId) {
+        testPaperRepository.deleteById(testPaperId);
+    }
+
+    /**
+     * Map TestPaper to DTO
+     * @param testPaper
+     * @return
+     */
     private TestPaperDTO matTestPaperToTestPaperDTO(TestPaper testPaper) {
         TestPaperDTO testPaperDTO = TestPaperMapper.INSTANCE.mapTestPaperToTestPaperDTO(testPaper);
         JobResponse jobResponse = jobService.find(testPaper.getJob().getId());

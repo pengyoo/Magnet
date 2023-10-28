@@ -77,7 +77,8 @@ public class AIPaperGeneratorServiceImpl implements AIPaperGeneratorService {
      * @param testPaperGenerationRequest
      * @return
      */
-    public TestPaperDTO generatePaper(TestPaperGenerationRequest testPaperGenerationRequest){
+
+    public synchronized TestPaperDTO generatePaper(TestPaperGenerationRequest testPaperGenerationRequest){
         // Check if test is already exist
         TestPaper testPaper = testPaperRepository.findByJobId(testPaperGenerationRequest.getJobId());
         if(testPaper != null) {

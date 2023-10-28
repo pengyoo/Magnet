@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Test Invitation Service
+ */
 @Service
 @RequiredArgsConstructor
 public class TestInvitationServiceImpl implements TestInvitationService {
@@ -33,6 +36,11 @@ public class TestInvitationServiceImpl implements TestInvitationService {
     private final ResumeRepository resumeRepository;
     private final JobRepository jobRepository;
 
+    /**
+     * Invite a candidate to do a test
+     * @param applicationId
+     * @return
+     */
     @Override
     public TestInvitationDTO invite(Long applicationId) {
 
@@ -74,11 +82,20 @@ public class TestInvitationServiceImpl implements TestInvitationService {
         return page.map(testInvitation -> mapTestInvitationToTestInvitationResponse(testInvitation));
     }
 
+    /**
+     * Delete a Invitation
+     * @param id
+     */
     @Override
     public void delete(Long id) {
         testInvitationRepository.deleteById(id);
     }
 
+    /**
+     * Find invitations that a user received
+     * @param pageable
+     * @return
+     */
     @Override
     public Page<TestInvitationDTO> findAllByCurrentUser(Pageable pageable) {
         User user = findCurrentUser();
@@ -86,6 +103,12 @@ public class TestInvitationServiceImpl implements TestInvitationService {
         return page.map(testInvitation -> mapTestInvitationToTestInvitationResponse(testInvitation));
     }
 
+
+    /**
+     * Find an invitation by ID
+     * @param id
+     * @return
+     */
     @Override
     public TestInvitationDTO findById(Long id) {
         TestInvitation invitation = testInvitationRepository
@@ -94,6 +117,10 @@ public class TestInvitationServiceImpl implements TestInvitationService {
         return mapTestInvitationToTestInvitationResponse(invitation);
     }
 
+    /**
+     * Find current login company
+     * @return
+     */
     private Company findCurrentCompany() {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -105,6 +132,10 @@ public class TestInvitationServiceImpl implements TestInvitationService {
         return company;
     }
 
+    /**
+     * find current user
+     * @return
+     */
     public User findCurrentUser(){
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
