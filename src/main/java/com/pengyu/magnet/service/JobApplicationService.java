@@ -21,4 +21,6 @@ public interface JobApplicationService {
     long count();
 
     Page<JobApplicationDTO> findAllByCurrentCompany(Pageable pageable);
+
+    List<Long> getJobApplicationCounts();
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDateTime;
+
 /**
  * Company Entity
  */
@@ -22,6 +24,8 @@ public class Company {
     private String address;
     private int scale;
     private String industry;
+
+    private LocalDateTime createdAt;
 
     @Column(columnDefinition = "text")
     private String description;

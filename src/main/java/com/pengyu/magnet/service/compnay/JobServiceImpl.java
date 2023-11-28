@@ -231,5 +231,10 @@ public class JobServiceImpl implements JobService {
         jobRepository.save(job);
     }
 
+    @Override
+    public List<Long> getJobCounts() {
+        return jobRepository.getJobCounts();
+    }
+
 
 }

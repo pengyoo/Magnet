@@ -195,6 +195,11 @@ public class ResumeServiceImpl implements ResumeService {
         }
     }
 
+    @Override
+    public List<Long> getResumeCounts() {
+        return resumeRepository.getResumeCounts();
+    }
+
     /**
      * Map resume to dto
      * @param resume

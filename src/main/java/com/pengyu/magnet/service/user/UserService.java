@@ -22,4 +22,6 @@ public interface UserService {
     UserResponse find(Long id);
 
     UserResponse save(UserRequest userRequest);
+
+    List<Long> getRegistrationCounts();
 }

@@ -4,6 +4,7 @@ import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.service.resume.ResumeService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class SResumeController {
      */
     @RolesAllowed({CONSTANTS.ROLE_JOB_SEEKER})
     @PostMapping
-    public ResumeDTO save(@RequestBody ResumeDTO resumeRequest){
+    public ResumeDTO save(@Valid @RequestBody ResumeDTO resumeRequest){
         return resumeService.save(resumeRequest);
     }
 

@@ -5,6 +5,7 @@ import com.pengyu.magnet.dto.CompanyRequest;
 import com.pengyu.magnet.dto.CompanyResponse;
 import com.pengyu.magnet.service.compnay.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class CCompanyController {
      */
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     @PostMapping
-    public CompanyResponse save(@RequestBody CompanyRequest companyRequest){
+    public CompanyResponse save(@Valid @RequestBody CompanyRequest companyRequest){
         return companyService.save(companyRequest);
     }
 

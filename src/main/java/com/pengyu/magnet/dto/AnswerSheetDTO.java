@@ -1,6 +1,7 @@
 package com.pengyu.magnet.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +11,8 @@ import java.util.List;
 @Builder
 public class AnswerSheetDTO {
     private Long id;
+
+    @NotNull
     private Long paperId;
     private List<AnswerDTO> answers;
 

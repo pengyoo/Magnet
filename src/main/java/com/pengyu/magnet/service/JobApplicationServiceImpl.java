@@ -180,6 +180,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
+    public List<Long> getJobApplicationCounts() {
+        return jobApplicationRepository.getJobApplicationCounts();
+    }
+
+    @Override
     public long countByCurrentUser() {
         // Get Current login user
         User user = getCurrentUser();

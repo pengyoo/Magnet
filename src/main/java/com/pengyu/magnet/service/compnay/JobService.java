@@ -24,4 +24,6 @@ public interface JobService {
     List<JobResponse> findAllByCurrentCompany(Pageable pageable);
 
     void delete(Long id);
+
+    List<Long> getJobCounts();
 }

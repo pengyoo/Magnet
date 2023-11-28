@@ -145,4 +145,9 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = UserMapper.INSTANCE.mapUserToUserResponse(user);
         return userResponse;
     }
+
+    @Override
+    public List<Long> getRegistrationCounts() {
+        return userRepository.getRegistrationCounts();
+    }
 }

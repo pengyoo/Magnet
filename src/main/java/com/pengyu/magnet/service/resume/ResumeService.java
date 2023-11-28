@@ -23,4 +23,6 @@ public interface ResumeService {
     void deleteExperience(Long id);
 
     void deleteProject(Long id);
+
+    List<Long> getResumeCounts();
 }

@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +60,9 @@ public class CompanyServiceImpl implements CompanyService {
 
         // Bind User
         company.setUser(user);
+
+        // Set Create Date
+        company.setCreatedAt(LocalDateTime.now());
 
         // Save user to database
         company = companyRepository.save(company);
@@ -120,4 +124,10 @@ public class CompanyServiceImpl implements CompanyService {
         return companyResponse;
 
     }
+
+    @Override
+    public List<Long> getCompanyCounts() {
+        return companyRepository.getCompanyCounts();
+    }
+
 }

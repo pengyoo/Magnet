@@ -14,4 +14,6 @@ public interface CompanyService {
     long count();
 
     CompanyResponse findCurrentCompany();
+
+    List<Long> getCompanyCounts();
 }

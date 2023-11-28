@@ -6,10 +6,12 @@ import com.pengyu.magnet.dto.*;
 import com.pengyu.magnet.service.user.UserService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody UserRegisterRequest registerRequest) {
+    public UserResponse register(@Valid @RequestBody UserRegisterRequest registerRequest) {
         return userService.register(registerRequest);
     }
     @PostMapping("/login")

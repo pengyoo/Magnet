@@ -7,6 +7,7 @@ import com.pengyu.magnet.service.compnay.JobService;
 import com.pengyu.magnet.utils.PageUtil;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +29,12 @@ public class CJobController {
      */
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     @PostMapping
-    public JobResponse save(@RequestBody JobRequest jobRequest){
+    public JobResponse save(@Valid @RequestBody JobRequest jobRequest){
         return jobService.save(jobRequest);
     }
     @RolesAllowed({CONSTANTS.ROLE_COMPANY})
     @PatchMapping("/{id}")
-    public JobResponse patch(@RequestBody JobRequest jobRequest){
+    public JobResponse patch(@Valid @RequestBody JobRequest jobRequest){
         return jobService.save(jobRequest);
     }
 
