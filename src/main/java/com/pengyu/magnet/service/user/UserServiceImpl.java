@@ -5,6 +5,7 @@ import com.pengyu.magnet.dto.UserLoginRequest;
 import com.pengyu.magnet.dto.UserRegisterRequest;
 import com.pengyu.magnet.dto.UserRequest;
 import com.pengyu.magnet.dto.UserResponse;
+import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.UserRepository;
@@ -40,6 +41,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResponse register(UserRegisterRequest registerRequest) {
+
+        // Check if email already exist
+        User byEmail = userRepository.findByEmail(registerRequest.getEmail());
+        if(byEmail != null)
+            throw new ApiException("The email is already existed!");
+
+        // Do register
         User user = User.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
