@@ -27,6 +27,6 @@ public class AnswerSheetDTO {
 
     private String applicant;
 
-    private float score;
+    private Float score;
 
 }

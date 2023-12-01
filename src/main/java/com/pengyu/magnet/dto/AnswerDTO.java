@@ -25,6 +25,6 @@ public class AnswerDTO {
 
     private Long questionId;
 
-    private float score;
+    private Float score;
 
 }
