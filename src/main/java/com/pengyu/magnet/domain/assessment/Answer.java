@@ -33,7 +33,7 @@ public class Answer {
 
     @JsonIgnore
     @Column(name="score")
-    private float score;
+    private Float score;
 
 
     @ManyToOne
