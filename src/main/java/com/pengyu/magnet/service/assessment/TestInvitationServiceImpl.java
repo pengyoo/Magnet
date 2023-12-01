@@ -2,6 +2,7 @@ package com.pengyu.magnet.service.assessment;
 
 
 import com.pengyu.magnet.domain.*;
+import com.pengyu.magnet.domain.assessment.AnswerSheet;
 import com.pengyu.magnet.domain.assessment.TestInvitation;
 import com.pengyu.magnet.domain.assessment.TestPaper;
 import com.pengyu.magnet.dto.TestInvitationDTO;
@@ -9,6 +10,7 @@ import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.TestInvitationMapper;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.*;
+import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
 import com.pengyu.magnet.repository.assessment.TestInvitationRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Test Invitation Service
@@ -35,6 +38,8 @@ public class TestInvitationServiceImpl implements TestInvitationService {
 
     private final ResumeRepository resumeRepository;
     private final JobRepository jobRepository;
+
+    private final AnswerSheetRepository answerSheetRepository;
 
     /**
      * Invite a candidate to do a test
@@ -162,6 +167,13 @@ public class TestInvitationServiceImpl implements TestInvitationService {
                 .orElseThrow(() -> new ResourceNotFoundException("No such job found with id " + testInvitation.getTestPaper().getJob().getId()));
         testInvitationResponse.setJobTitle(job.getTitle());
 
+        // Set Test Score
+        AnswerSheet answerSheet = answerSheetRepository.findByUserAndTestPaper(testInvitation.getUser(), testInvitation.getTestPaper()).orElse(null);
+
+        if(answerSheet != null && answerSheet.getScore() != null)
+        {
+            testInvitationResponse.setTestScore(answerSheet.getScore());
+        }
         return testInvitationResponse;
     }
 }

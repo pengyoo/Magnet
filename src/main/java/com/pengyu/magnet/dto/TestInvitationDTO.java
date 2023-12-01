@@ -23,5 +23,7 @@ public class TestInvitationDTO {
     @Enumerated(EnumType.STRING)
     private TestInvitation.Status status;
 
+    private Float testScore;
+
 
 }
