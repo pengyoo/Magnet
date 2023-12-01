@@ -49,6 +49,6 @@ public class AnswerSheet {
     private List<Answer> answerList;
 
     @Column(name = "score")
-    private float score;
+    private Float score;
 
 }

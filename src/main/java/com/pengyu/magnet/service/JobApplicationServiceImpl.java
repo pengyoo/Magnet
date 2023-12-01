@@ -257,7 +257,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         Job job = jobApplication.getJob();
         TestPaper testPaper = testPaperRepository.findByJobId(job.getId());
         AnswerSheet answerSheet = answerSheetRepository.findByUserAndTestPaper(applicant, testPaper).orElse(null);
-        if(answerSheet != null) {
+        if(answerSheet != null && answerSheet.getScore() != null) {
             jobApplicationResponse.setTestScore(answerSheet.getScore());
         }
         return jobApplicationResponse;
