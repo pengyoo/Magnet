@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.match;
+package com.pengyu.magnet.service.ai;
 
 
 import com.pengyu.magnet.domain.match.JobInsights;
@@ -8,7 +8,7 @@ import com.pengyu.magnet.dto.MatchingIndexDTO;
 /**
  * AI Test Paper Generator Service
  */
-public interface AIMatchService {
+public interface AIService {
 
     // Prompt Template
 

@@ -87,4 +87,11 @@ public class AnswerSheetController {
 
         return answerSheetService.findAll(pageable, userId);
     }
+
+    @DeleteMapping("/{answerSheetId}")
+    @RolesAllowed({CONSTANTS.ROLE_ADMIN})
+    public void delete(@PathVariable Long answerSheetId){
+        answerSheetService.delete(answerSheetId);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.pengyu.magnet.service.match;
+package com.pengyu.magnet.service.ai;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +22,8 @@ import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
 import com.pengyu.magnet.repository.match.JobRequirementsRepository;
 import com.pengyu.magnet.repository.match.MatchingIndexRepository;
 import com.pengyu.magnet.repository.match.ResumeInsightsRepository;
+import com.pengyu.magnet.service.match.JobInsightsService;
+import com.pengyu.magnet.service.match.ResumeInsightsService;
 import com.pengyu.magnet.service.resume.ResumeServiceImpl;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.structured.StructuredPrompt;
@@ -30,14 +32,12 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 /**
  * OpenAI Job and Resume Match Service
  */
 @Service
 @RequiredArgsConstructor
-public class OpenAIMatchServiceImpl implements AIMatchService {
+public class OpenAIServiceImpl implements AIService {
     private final MatchAgent matchAgent;
     private final ObjectMapper objectMapper;
     private final JobRepository jobRepository;

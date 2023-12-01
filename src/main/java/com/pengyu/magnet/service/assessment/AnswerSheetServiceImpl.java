@@ -15,19 +15,15 @@ import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.*;
-import com.pengyu.magnet.service.assessment.AnswerSheetService;
-import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.ai.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -223,6 +219,11 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
         return answerSheetRepository
                 .findAllByCompany(company, pageable)
                 .map(answerSheet -> mapToAnswerSheetDTO(answerSheet));
+    }
+
+    @Override
+    public void delete(Long answerSheetId) {
+        answerSheetRepository.deleteById(answerSheetId);
     }
 
     private Company findCurrentCompany() {

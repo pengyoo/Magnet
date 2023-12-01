@@ -6,7 +6,7 @@ import com.pengyu.magnet.dto.ResumeDTO;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.mapper.*;
 import com.pengyu.magnet.repository.*;
-import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.ai.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

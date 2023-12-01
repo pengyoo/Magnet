@@ -17,4 +17,6 @@ public interface AnswerSheetService {
     long count(Long userId);
 
     Page<AnswerSheetDTO> findAllByCurrentCompany(Pageable pageable);
+
+    void delete(Long answerSheetId);
 }

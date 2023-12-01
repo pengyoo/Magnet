@@ -13,7 +13,7 @@ import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.*;
 import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
 import com.pengyu.magnet.repository.assessment.TestPaperRepository;
-import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.ai.AsyncTaskService;
 import com.pengyu.magnet.service.match.MatchingIndexService;
 import com.pengyu.magnet.service.resume.ResumeService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Job Application business layer

@@ -5,7 +5,7 @@ import com.pengyu.magnet.config.CONSTANTS;
 import com.pengyu.magnet.domain.match.JobInsights;
 import com.pengyu.magnet.domain.match.ResumeInsights;
 import com.pengyu.magnet.dto.MatchingIndexDTO;
-import com.pengyu.magnet.service.match.AIMatchService;
+import com.pengyu.magnet.service.ai.AIService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/aimatch")
 public class AIMatchController {
 
-    private final AIMatchService aiMatchService;
+    private final AIService aiMatchService;
 
 //    @GetMapping("/extract_skills")
 //    public List<ResumeDTO.SkillDTO> extractSkill(@RequestParam Long jobId) {

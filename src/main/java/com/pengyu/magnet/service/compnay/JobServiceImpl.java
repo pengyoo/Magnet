@@ -11,7 +11,7 @@ import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.repository.CompanyRepository;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.UserRepository;
-import com.pengyu.magnet.service.match.AsyncTaskService;
+import com.pengyu.magnet.service.ai.AsyncTaskService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;

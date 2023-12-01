@@ -1,6 +1,7 @@
-package com.pengyu.magnet.service.match;
+package com.pengyu.magnet.service.ai;
 
 
+import com.pengyu.magnet.service.ai.AIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AsyncTaskService {
 
-    private final AIMatchService aiMatchService;
+    private final AIService aiMatchService;
 
 
     /**
