@@ -81,4 +81,10 @@ public class UserController {
     public UserResponse patch(@RequestBody UserRequest userRequest, @PathVariable String id) {
         return userService.save(userRequest);
     }
+
+    @PostMapping("/reset_password")
+    @RolesAllowed({CONSTANTS.ROLE_ADMIN, CONSTANTS.ROLE_COMPANY, CONSTANTS.ROLE_JOB_SEEKER})
+    public void resetPassword(@Valid @RequestBody UserRequest userRequest) {
+        userService.resetPassword(userRequest.getPassword());
+    }
 }

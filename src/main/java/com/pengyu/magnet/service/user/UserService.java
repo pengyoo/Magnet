@@ -24,4 +24,6 @@ public interface UserService {
     UserResponse save(UserRequest userRequest);
 
     List<Long> getRegistrationCounts();
+
+    void resetPassword(String newPassword);
 }
