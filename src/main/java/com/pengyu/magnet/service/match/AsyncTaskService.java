@@ -41,4 +41,9 @@ public class AsyncTaskService {
     public void asyncMatchJobAndResume(Long jobId, Long resumeId) {
         aiMatchService.match(jobId, resumeId);
     }
+
+    @Async
+    public void asyncScoreTest(Long answerSheetId) {
+        aiMatchService.scoreTest(answerSheetId);
+    }
 }

@@ -1,6 +1,8 @@
 package com.pengyu.magnet.service;
 
 import com.pengyu.magnet.domain.*;
+import com.pengyu.magnet.domain.assessment.AnswerSheet;
+import com.pengyu.magnet.domain.assessment.TestPaper;
 import com.pengyu.magnet.dto.*;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
@@ -9,6 +11,8 @@ import com.pengyu.magnet.mapper.JobApplicationMapper;
 import com.pengyu.magnet.mapper.JobMapper;
 import com.pengyu.magnet.mapper.UserMapper;
 import com.pengyu.magnet.repository.*;
+import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
+import com.pengyu.magnet.repository.assessment.TestPaperRepository;
 import com.pengyu.magnet.service.match.AsyncTaskService;
 import com.pengyu.magnet.service.match.MatchingIndexService;
 import com.pengyu.magnet.service.resume.ResumeService;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Job Application business layer
@@ -43,6 +48,10 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final ResumeService resumeService;
 
     private final MatchingIndexService matchingIndexService;
+
+    private final AnswerSheetRepository answerSheetRepository;
+
+    private final TestPaperRepository testPaperRepository;
 
     /**
      * Apply a job
@@ -243,6 +252,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         MatchingIndexDTO matchingIndexDTO = matchingIndexService.findByMatchingIndexByJobApplication(jobApplication);
         jobApplicationResponse.setMatchingIndex(matchingIndexDTO);
 
+        // Set Test Score
+        User applicant = jobApplication.getUser();
+        Job job = jobApplication.getJob();
+        TestPaper testPaper = testPaperRepository.findByJobId(job.getId());
+        AnswerSheet answerSheet = answerSheetRepository.findByUserAndTestPaper(applicant, testPaper).orElse(null);
+        if(answerSheet != null) {
+            jobApplicationResponse.setTestScore(answerSheet.getScore());
+        }
         return jobApplicationResponse;
     }
 }

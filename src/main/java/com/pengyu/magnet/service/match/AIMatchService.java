@@ -40,5 +40,6 @@ public interface AIMatchService {
     public MatchingIndexDTO match(Long jobId, Long resumeId);
 
     public MatchingIndexDTO find(Long jobId, Long resumeId);
+    public void scoreTest(Long answerSheetId);
 
 }

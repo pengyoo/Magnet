@@ -18,9 +18,13 @@ public class AnswerDTO {
 
     private String questionText;
 
+    private String exampleAnswer;
+
     @NotBlank
     private String answer;
 
     private Long questionId;
+
+    private float score;
 
 }

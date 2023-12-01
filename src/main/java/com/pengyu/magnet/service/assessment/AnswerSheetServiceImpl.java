@@ -16,6 +16,7 @@ import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
 import com.pengyu.magnet.repository.assessment.*;
 import com.pengyu.magnet.service.assessment.AnswerSheetService;
+import com.pengyu.magnet.service.match.AsyncTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,13 +50,15 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
     private final TestInvitationRepository testInvitationRepository;
     private final ResumeRepository resumeRepository;
 
+    private final AsyncTaskService asyncTaskService;
+
     /**
      * Save Answer Sheet from a user
      * @param answerSheetDTO
      * @return
      */
     @Override
-    @Transactional
+//    @Transactional
     public AnswerSheetDTO save(AnswerSheetDTO answerSheetDTO) {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,7 +82,7 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                 .answerList(answerSheetDTO.getAnswers().stream().map(
                         answerDTO -> AnswerMapper.INSTANCE.mapAnswerDTOToAnswer(answerDTO)).collect(Collectors.toList()))
                 .createdAt(LocalDateTime.now())
-                .build();
+                .score(answerSheetDTO.getScore()).build();
 
         // Bind Answer Sheet for Answer
         for(Answer answer : answerSheet.getAnswerList()) {
@@ -95,6 +98,11 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                 .orElseThrow(() -> new ResourceNotFoundException("No such Test Invitation found with id " + answerSheetDTO.getInvitationId()));
         testInvitation.setStatus(TestInvitation.Status.FINISHED);
         testInvitationRepository.save(testInvitation);
+
+
+        // Score Test Result
+        asyncTaskService.asyncScoreTest(answerSheet.getId());
+
 
         // map to dto
         return mapToAnswerSheetDTO(answerSheet);
@@ -191,7 +199,7 @@ public class AnswerSheetServiceImpl implements AnswerSheetService {
                     .questionText(answerDTO.getQuestionText())
                     .answer(answerDTO.getAnswer())
                     .id(answerDTO.getId())
-                    .build();
+                    .score(answerDTO.getScore()).build();
             answerRepository.save(answer);
         }
     }

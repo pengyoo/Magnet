@@ -5,12 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengyu.magnet.domain.Job;
 import com.pengyu.magnet.domain.Resume;
+import com.pengyu.magnet.domain.assessment.AnswerSheet;
 import com.pengyu.magnet.domain.match.JobInsights;
 import com.pengyu.magnet.domain.match.MatchingIndex;
 import com.pengyu.magnet.domain.match.ResumeInsights;
-import com.pengyu.magnet.dto.JobResponse;
-import com.pengyu.magnet.dto.MatchingIndexDTO;
-import com.pengyu.magnet.dto.ResumeDTO;
+import com.pengyu.magnet.dto.*;
 import com.pengyu.magnet.exception.ApiException;
 import com.pengyu.magnet.exception.ResourceNotFoundException;
 import com.pengyu.magnet.langchain4j.MatchAgent;
@@ -19,6 +18,7 @@ import com.pengyu.magnet.mapper.MatchingIndexMapper;
 import com.pengyu.magnet.repository.JobRepository;
 import com.pengyu.magnet.repository.ResumeRepository;
 import com.pengyu.magnet.repository.UserRepository;
+import com.pengyu.magnet.repository.assessment.AnswerSheetRepository;
 import com.pengyu.magnet.repository.match.JobRequirementsRepository;
 import com.pengyu.magnet.repository.match.MatchingIndexRepository;
 import com.pengyu.magnet.repository.match.ResumeInsightsRepository;
@@ -29,6 +29,8 @@ import dev.langchain4j.model.input.structured.StructuredPromptProcessor;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * OpenAI Job and Resume Match Service
@@ -47,6 +49,8 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     private final UserRepository userRepository;
     private final JobRequirementsRepository jobRequirementsRepository;
     private final ResumeInsightsRepository resumeInsightsRepository;
+
+    private final AnswerSheetRepository answerSheetRepository;
 
 
     // Prompt Template
@@ -159,6 +163,45 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
     static class JobResumeMatchingPrompt {
         private String resumeInsights;
         private String jobInsights;
+    }
+
+    @StructuredPrompt({
+            "You are provided with an \"AnswerList\" containing the following fields: id, questionText, exampleAnswer, answer, and score. Your goal is to score each answer based on the provided exampleAnswer. The scoring should range from 0 to 100. Additionally, calculate the average score for all answers.",
+            "Each item in the \"AnswerList\" represents a Q&A pair. For each answer, compare the provided answer with the corresponding exampleAnswer. Assign a score of 100 if they match perfectly, and a score of 0 if there is no match.",
+            "Example AnswerList:",
+            """
+                    [
+                      {"id": 151, "questionText": "What is Java?", "exampleAnswer": "Java is a high-level programming language...", "answer": "Java is a high-level programming language..."},
+                      {"id": 152, "questionText": "What is Spring Boot?", "exampleAnswer": "Spring Boot is a framework that simplifies Java application development...", "answer": "Spring Boot is a framework that simplifies Java application development..."}
+                    ]             
+                    """,
+            "Example Output:",
+            """
+                    {
+                      "score": "100",
+                      "answerScores": [
+                        {"id": 151, "score": 100},
+                        {"id": 152, "score": 100}
+                        ]
+                    }
+                                        
+                    """,
+            "Structure your answer in the following way:",
+            """
+                    {
+                      "score": "...",
+                      "answerScores": [
+                        {"id": "...", "score": "..."},
+                        {"id": "...", "score": "..."}
+                      ]
+                    }
+                                        
+                    """,
+            "AnswerList: {{answerList}}",
+    })
+    @AllArgsConstructor
+    static class TestScorePrompt {
+        private String answerList;
     }
 
     public JobInsights extractJobInsights(Long jobId) {
@@ -300,6 +343,44 @@ public class OpenAIMatchServiceImpl implements AIMatchService {
             matchingIndexDTO.setResumeDTO(ResumeServiceImpl.mapResumeToResumeDTO(resume));
             matchingIndexDTO.setJobResponse(JobMapper.INSTANCE.mapJobToJobResponse(job));
             return matchingIndexDTO;
+        } catch (JsonProcessingException e) {
+            throw new ApiException(e.getMessage());
+        }
+    }
+
+    public void scoreTest(Long answerSheetId) {
+        try {
+            AnswerSheet answerSheet = answerSheetRepository
+                    .findById(answerSheetId)
+                    .orElseThrow(() -> new ResourceNotFoundException("No such Answer Sheet found with ID " + answerSheetId));
+
+
+            // Build prompt template
+            TestScorePrompt testScorePrompt =
+                    new TestScorePrompt(objectMapper.writeValueAsString(answerSheet.getAnswerList()).replaceAll("&quot;", ""));
+
+            // Render template
+            Prompt prompt = StructuredPromptProcessor.toPrompt(testScorePrompt);
+
+            // Call AI API to extract Resume Characteristics
+            String json = matchAgent.chat(prompt.toUserMessage().text());
+
+            // Parse return json
+            TestScoreDTO testScoreDTO = objectMapper.readValue(json, TestScoreDTO.class);
+
+
+            // Update Scores
+            answerSheet.setScore(testScoreDTO.getScore());
+            for(var answer : answerSheet.getAnswerList()) {
+                for(var testAnswerScoreDTO : testScoreDTO.getAnswerScores())
+                    if(testAnswerScoreDTO.getId().equals(answer.getId())) {
+                        answer.setScore(testAnswerScoreDTO.getScore());
+                        continue;
+                    }
+            }
+
+            answerSheetRepository.save(answerSheet);
+
         } catch (JsonProcessingException e) {
             throw new ApiException(e.getMessage());
         }

@@ -45,7 +45,10 @@ public class AnswerSheet {
     )
     private User user;
 
-    @OneToMany(mappedBy = "answerSheet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "answerSheet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Answer> answerList;
+
+    @Column(name = "score")
+    private float score;
 
 }

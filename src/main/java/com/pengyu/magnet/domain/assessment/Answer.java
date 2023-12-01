@@ -25,8 +25,15 @@ public class Answer {
     @Column(name = "question", columnDefinition = "text")
     private String questionText;
 
+    @Column(name = "example_answer", columnDefinition = "text")
+    private String exampleAnswer;
+
     @Column(columnDefinition = "text")
     private String answer;
+
+    @JsonIgnore
+    @Column(name="score")
+    private float score;
 
 
     @ManyToOne

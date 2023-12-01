@@ -29,4 +29,6 @@ public class JobApplicationDTO {
     private LocalDateTime appliedDate;
     private JobApplication.Status status;
 
+    private float testScore;
+
 }
