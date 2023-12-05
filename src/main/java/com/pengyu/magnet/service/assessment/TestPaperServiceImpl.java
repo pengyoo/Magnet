@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -181,13 +182,28 @@ public class TestPaperServiceImpl implements TestPaperService {
                 .findById(testPaperId)
                 .orElseThrow(() -> new ResourceNotFoundException("No such Test Paper found with id " + testPaperId));
 
-        for (Question question : testPaper.getQuestionList()) {
-            if(question.getId() == questionId) {
-                testPaper.getQuestionList().remove(question);
+//        You are using an enhanced for loop to iterate over the testPaper.getQuestionList(),
+//        and you are trying to remove an element from the list within the loop.
+//        This can result in a ConcurrentModificationException.
+//        for (Question question : testPaper.getQuestionList()) {
+//            if(question.getId().equals(questionId)) {
+//                testPaper.getQuestionList().remove(question);
+//
+//            }
+//        }
+//        testPaperRepository.save(testPaper);
+
+        // Using an iterator avoids the ConcurrentModificationException issue.
+        Iterator<Question> iterator = testPaper.getQuestionList().iterator();
+        while (iterator.hasNext()) {
+            Question question = iterator.next();
+            if (question.getId().equals(questionId)) {
+                iterator.remove();
                 questionRepository.delete(question);
             }
         }
         testPaperRepository.save(testPaper);
+
     }
 
     /**
