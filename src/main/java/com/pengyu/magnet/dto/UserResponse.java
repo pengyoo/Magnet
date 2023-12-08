@@ -24,6 +24,8 @@ public class UserResponse {
     private String role;
     private String token;
 
+    private String headShotName;
+
     private User.Status status;
 
 }

@@ -71,7 +71,7 @@ aws:
   s3:
     mock: false
     buckets:
-      resume: elasticbeanstalk-eu-west-1-845708981828
+      images: elasticbeanstalk-eu-west-1-845708981828
 
 external:
   apilayer:

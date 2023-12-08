@@ -43,6 +43,7 @@ public class User implements UserDetails {
 
     private Status status;
     private LocalDateTime createdAt;
+    private String headShotName;
     @Enumerated(EnumType.STRING)
     private Role role;
 

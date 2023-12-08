@@ -160,6 +160,12 @@ public class JobServiceImpl implements JobService {
         // map job to dto
         JobResponse jobResponse = JobMapper.INSTANCE.mapJobToJobResponse(job);
         jobResponse.setCompanyData(CompanyMapper.INSTANCE.mapCompanyToCompanyResponse(job.getCompany()));
+
+        // Set Company Logo Url
+        if(job.getCompany().getUser().getHeadShotName() != null) {
+            String url = "/images/%s/%s".formatted(job.getCompany().getUser().getEmail(), job.getCompany().getUser().getHeadShotName());
+            jobResponse.getCompanyData().setLogoUrl(url);
+        }
         return jobResponse;
     }
 

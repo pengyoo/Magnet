@@ -25,6 +25,8 @@ public class CompanyResponse {
     private String industry;
     private String description;
 
+    private String logoUrl;
+
     @JsonProperty("user")
     private UserResponse userData;
 
