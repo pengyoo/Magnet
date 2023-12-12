@@ -166,8 +166,10 @@ public class OpenAIServiceImpl implements AIService {
     }
 
     @StructuredPrompt({
-            "You are provided with an \"AnswerList\" containing the following fields: id, questionText, exampleAnswer, answer, and score. Your goal is to score each answer based on the provided exampleAnswer. The scoring should range from 0 to 100. Additionally, calculate the average score for all answers.",
-            "Each item in the \"AnswerList\" represents a Q&A pair. For each answer, compare the provided answer with the corresponding exampleAnswer. Assign a score of 100 if they match perfectly, and a score of 0 if there is no match.",
+//            "You are provided with an \"AnswerList\" containing the following fields: id, questionText, exampleAnswer, answer, and score. Your goal is to score each answer based on the provided exampleAnswer. The scoring should range from 0 to 100. Additionally, calculate the average score for all answers and store it into 'score' field in the root json.",
+//            "Each item in the \"AnswerList\" represents a Q&A pair. For each answer, compare the provided answer with the corresponding exampleAnswer. Assign a score of 100 if they match perfectly, and a score of 0 if there is no match.",
+            "Given an 'AnswerList' comprising fields such as id, questionText, exampleAnswer, answer, and score, your objective is to assess each answer's similarity to the provided exampleAnswer, assigning scores ranging from 0 to 100. Subsequently, calculate the average score for all answers and store it in the 'score' field at the root of the JSON structure.",
+            "Each entry in the 'AnswerList' represents a Q&A pair, and your scoring mechanism involves comparing the provided answer with the corresponding exampleAnswer. A perfect match results in a score of 100, while no match yields a score of 0.",
             "Example AnswerList:",
             """
                     [
@@ -178,10 +180,10 @@ public class OpenAIServiceImpl implements AIService {
             "Example Output:",
             """
                     {
-                      "score": "100",
+                      "score": "90",
                       "answerScores": [
                         {"id": 151, "score": 100},
-                        {"id": 152, "score": 100}
+                        {"id": 152, "score": 80}
                         ]
                     }
                                         
