@@ -12,3 +12,5 @@
 
 ### 5. Visit http://localhost:8080/swagger-ui/index.html to view available APIs.
 
+## Deployed URL: https://magnet.itireland.works/
+
