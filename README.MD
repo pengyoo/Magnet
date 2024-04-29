@@ -12,10 +12,3 @@
 
 ### 5. Visit http://localhost:8080/swagger-ui/index.html to view available APIs.
 
-## Frontend React.js Application:
-
-### 1. Set up Node.js environment
-
-### 2. Install dependencies by running `npm install` in frontend directory
-
-### 3. Run fronted application by running `npm run dev`
