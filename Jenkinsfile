@@ -11,7 +11,7 @@ pipeline {
                   - name: jnlp
                     image: jenkins/inbound-agent:latest
                   - name: maven
-                    image: maven:latest
+                    image: maven:3.9.2
                     command:
                     - cat
                     tty: true
