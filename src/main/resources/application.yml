@@ -71,7 +71,8 @@ springdoc:
 
 
 security:
-  secret_key: ${SECURITY_SECRET_KEY}
+#  secret_key: ${SECURITY_SECRET_KEY}
+  secret_key: sdjfkjklkjdfk
 
 aws:
   region: eu-west-1
@@ -82,7 +83,7 @@ aws:
 
 external:
   apilayer:
-    key: ${RESUME_PARSER_API_KEY}
+    key: pX0RFlib7QlR7TLEWBT4kODBFWNHaX68
     resume_parser:
       url: https://api.apilayer.com/resume_parser/upload
     skills:
@@ -99,7 +100,8 @@ langchain4j:
 #    provider: huggingface
     openai:
       url: https://openkey.cloud
-      api-key: ${OPEN_AI_API_KEY}
+#      api-key: ${OPEN_AI_API_KEY}
+      api-key: adf
       model-name: gpt-3.5-turbo
 #      model-name: gpt-4
       temperature: 0.0
@@ -112,7 +114,8 @@ langchain4j:
 #      log-requests: true
 #      log-responses: true
     huggingface:
-      access-token: ${HUGGINGFACE_ACCESS_TOKEN}
+#      access-token: ${HUGGINGFACE_ACCESS_TOKEN}
+      access-token: adfsdf
       model-name: mistralai/Mistral-7B-v0.1
 #      temperature: 0.0
 #      timeout: PT60S
