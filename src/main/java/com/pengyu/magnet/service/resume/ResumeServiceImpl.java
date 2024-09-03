@@ -43,7 +43,7 @@ public class ResumeServiceImpl implements ResumeService {
      * @return
      */
     @Override
-    @Transactional
+//    @Transactional
     public ResumeDTO save(ResumeDTO resumeRequest) {
         // Get Current login user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -11,10 +11,16 @@ spring:
 #    password: root
 
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    driverClassName: org.sqlite.JDBC
+    url: jdbc:sqlite:magnet.db
+    username:
+    password:
+
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: ${MYSQL_URL}
+#    username: ${MYSQL_USER}
+#    password: ${MYSQL_PASSWORD}
 
 #  datasource:
 #    driverClassName: org.postgresql.Driver
@@ -31,7 +37,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    database-platform: org.hibernate.dialect.MySQLDialect
+#    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
   servlet:
     multipart:
       max-file-size: 5MB
@@ -69,7 +76,7 @@ security:
 aws:
   region: eu-west-1
   s3:
-    mock: false
+    mock: true
     buckets:
       images: elasticbeanstalk-eu-west-1-845708981828
 

@@ -116,7 +116,7 @@ public class ExternalAPIServiceImpl implements ExternalAPIService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         // Send GET request
-        ResponseEntity<CountryAPIDTO[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, CountryAPIDTO[].class, "data");
+        ResponseEntity<CountryAPIDTO[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, CountryAPIDTO[].class);
 
         List<String> countries = new ArrayList<>();
         for(CountryAPIDTO countryAPIDTO : response.getBody()) {
