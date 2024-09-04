@@ -73,12 +73,31 @@ pipeline {
         SONARQUBE_CREDENTIALS_ID = 'sonarqube'
     }
 
+    parameters {
+        gitParameter name: 'TAG',
+                type: 'PT_TAG',
+                defaultValue: 'master'
+    }
+
     stages {
-        stage('Checkout') {
+
+        stage('Example') {
             steps {
-                git 'https://github.com/pengyoo/Magnet.git'
+                checkout([$class: 'GitSCM',
+                          branches: [[name: "${params.TAG}"]],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [],
+                          gitTool: 'Default',
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[url: 'https://github.com/pengyoo/Magnet.git']]
+                ])
             }
         }
+//        stage('Checkout') {
+//            steps {
+//                git 'https://github.com/pengyoo/Magnet.git'
+//            }
+//        }
 
         stage('Build and Test') {
             steps {
