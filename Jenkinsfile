@@ -60,7 +60,8 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'ypydd88/magnet'
+        APP_NAME = 'magnet'
+        DOCKER_IMAGE = "ypydd88/${APP_NAME}"
         K8S_NAMESPACE = 'demo'
         K8S_CREDENTIALS_ID = 'k3s'  // Replace with your Kubernetes credentials ID
         DOCKER_CREDENTIALS_ID = 'docker-hub-registry'  // Replace with your Docker Hub credentials ID
@@ -137,17 +138,17 @@ pipeline {
                                 sh "kubectl apply -f kubernetes/"
 
                                 // 更新部署镜像
-                                sh "kubectl set image deployment/demo demo=${DOCKER_IMAGE}:${BUILD_NUMBER} -n ${K8S_NAMESPACE}"
+                                sh "kubectl set image deployment/${APP_NAME} ${APP_NAME}=${DOCKER_IMAGE}:${BUILD_NUMBER} -n ${K8S_NAMESPACE}"
 
                                 // 等待部署完成
-                                sh "kubectl rollout status deployment/demo -n ${K8S_NAMESPACE} --timeout=180s"
+                                sh "kubectl rollout status deployment/${APP_NAME} -n ${K8S_NAMESPACE} --timeout=180s"
 
                                 // 检查部署状态
-                                sh "kubectl get deployment demo -n ${K8S_NAMESPACE} -o wide"
-                                sh "kubectl get pods -n ${K8S_NAMESPACE} -l app=demo"
+                                sh "kubectl get deployment ${APP_NAME} -n ${K8S_NAMESPACE} -o wide"
+                                sh "kubectl get pods -n ${K8S_NAMESPACE} -l app=${APP_NAME}"
                             } catch (Exception e) {
                                 echo "部署失败: ${e.getMessage()}"
-                                sh "kubectl describe deployment demo -n ${K8S_NAMESPACE}"
+                                sh "kubectl describe deployment ${APP_NAME} -n ${K8S_NAMESPACE}"
                                 sh "kubectl get events -n ${K8S_NAMESPACE} --sort-by=.metadata.creationTimestamp"
                                 error "部署到 K3s 失败"
                             }
