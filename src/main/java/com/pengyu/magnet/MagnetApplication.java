@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class MagnetApplication {
 
     public static void main(String[] args) {
+        System.out.println("test web hook");
         SpringApplication.run(MagnetApplication.class, args);
     }
 
