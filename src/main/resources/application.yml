@@ -49,7 +49,7 @@ spring:
 server:
   error:
     include-message: always # Return Customized Exception Message to Client
-  port: 8081
+  port: 8080
 
 cors:
   allowed-origins: "*"

@@ -19,6 +19,11 @@ pipeline {
                     - name: maven-repo
                       mountPath: /root/.m2
                     env:
+                    - name: SECURITY_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: env-variables
+                          key: SECURITY_SECRET_KEY
                     - name: RESUME_PARSER_API_KEY
                       valueFrom:
                         secretKeyRef:
