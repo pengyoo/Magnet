@@ -73,7 +73,7 @@ pipeline {
         SONARQUBE_CREDENTIALS_ID = 'sonarqube'
     }
 
-
+    stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/pengyoo/Magnet.git'
