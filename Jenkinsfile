@@ -18,6 +18,9 @@ pipeline {
                     volumeMounts:
                     - name: maven-repo
                       mountPath: /root/.m2
+                    envFrom:
+                     - secretRef:
+                      name: env-variables
                   - name: kubectl
                     image: lachlanevenson/k8s-kubectl
                     command:
