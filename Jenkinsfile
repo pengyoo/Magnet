@@ -18,9 +18,22 @@ pipeline {
                     volumeMounts:
                     - name: maven-repo
                       mountPath: /root/.m2
-                    envFrom:
-                     - secretRef:
-                      name: env-variables
+                    env:
+                    - name: RESUME_PARSER_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: env-variables
+                          key: RESUME_PARSER_API_KEY
+                    - name: OPEN_AI_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: env-variables
+                          key: OPEN_AI_API_KEY
+                    - name: HUGGINGFACE_ACCESS_TOKEN
+                      valueFrom:
+                        secretKeyRef:
+                          name: env-variables
+                          key: HUGGINGFACE_ACCESS_TOKEN
                   - name: kubectl
                     image: lachlanevenson/k8s-kubectl
                     command:
