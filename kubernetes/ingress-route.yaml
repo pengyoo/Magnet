@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: magnet-ingressroute
+  namespace: demo
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`magnet.local`)
+      kind: Rule
+      services:
+        - name: magnet
+          port: 80
+  tls:
+    secretName: magnet-tls
