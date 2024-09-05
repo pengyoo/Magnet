@@ -11,6 +11,6 @@ spec:
       kind: Rule
       services:
         - name: magnet
-          port: 80
+          port: 8080
   tls:
     secretName: magnet-tls
