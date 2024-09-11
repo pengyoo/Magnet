@@ -10,17 +10,17 @@ spring:
 #    username: root
 #    password: root
 
-  datasource:
-    driverClassName: org.sqlite.JDBC
-    url: jdbc:sqlite:magnet.db
-    username:
-    password:
-
 #  datasource:
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    url: ${MYSQL_URL}
-#    username: ${MYSQL_USER}
-#    password: ${MYSQL_PASSWORD}
+#    driverClassName: org.sqlite.JDBC
+#    url: jdbc:sqlite:magnet.db
+#    username:
+#    password:
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
 #  datasource:
 #    driverClassName: org.postgresql.Driver
