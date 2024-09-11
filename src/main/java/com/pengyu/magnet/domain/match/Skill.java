@@ -11,7 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class Skill {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String skill;

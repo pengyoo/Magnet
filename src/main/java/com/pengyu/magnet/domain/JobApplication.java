@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class JobApplication {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // One JOB_SEEKER can apply multiple jobs
