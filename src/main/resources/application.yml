@@ -4,11 +4,6 @@ spring:
 #    allow-circular-references: true
   config:
     import: optional:file:.env[.properties]
-#  datasource:
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/magnet
-#    username: root
-#    password: root
 
 #  datasource:
 #    driverClassName: org.sqlite.JDBC
@@ -76,9 +71,18 @@ security:
 aws:
   region: eu-west-1
   s3:
-    mock: true
+    mock: false
     buckets:
       images: elasticbeanstalk-eu-west-1-845708981828
+
+minio:
+  endpoint: ${MIN_IO_ENDPOINT}
+  access-key: ${MIN_IO_ACCESS_KEY}
+  secret-key: ${MIN_IO_SECRET_KEY}
+  minio-region: ${MINIO_REGION_NAME}
+  buckets:
+    images: ${MINIO_BUCKET}
+
 
 external:
   apilayer:
