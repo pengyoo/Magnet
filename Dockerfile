@@ -1,15 +1,30 @@
-# 使用官方 OpenJDK 作为基础镜像
-FROM openjdk:17-jdk-alpine
+FROM maven:3.8.4-openjdk-17 AS build
 
-# 创建一个工作目录
+# Set working directory
 WORKDIR /app
 
-# 将编译好的 JAR 文件复制到容器中
-COPY target/Magnet-0.0.1-SNAPSHOT.jar app.jar
+# Copy the project files
+COPY pom.xml .
+COPY src ./src
 
-# 声明应用程序使用的端口
+# Build the application with verbose output and list target directory
+RUN mvn clean package -DskipTests -X && \
+    echo "Maven build completed. Listing target directory:" && \
+    ls -l target && \
+    echo "Listing all JAR files in target directory:" && \
+    find target -name "*.jar"
+
+# Use OpenJDK for running the application
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+# Copy all JAR files from build stage and list the contents
+COPY --from=build /app/target/*.jar ./app.jar
+RUN echo "Listing JAR files in app directory:" && \
+    ls -l *.jar
 EXPOSE 8080
 
-# 设置默认的启动命令
+# Run the application (adjust the JAR file name if necessary)
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
